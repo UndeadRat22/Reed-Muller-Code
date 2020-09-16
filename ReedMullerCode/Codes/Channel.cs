@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using ReedMullerCode.Infrastructure;
 
-namespace ReedMullerCode.Infrastructure
+namespace ReedMullerCode.Codes
 {
     public class Channel
     {

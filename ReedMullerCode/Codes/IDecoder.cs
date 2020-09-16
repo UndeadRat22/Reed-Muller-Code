@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace ReedMullerCode.Infrastructure
+namespace ReedMullerCode.Codes
 {
     public interface IDecoder
     {

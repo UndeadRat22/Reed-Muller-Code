@@ -1,7 +1,4 @@
-﻿using System.Text;
-using ReedMullerCode.Infrastructure;
-
-namespace ReedMullerCode
+﻿namespace ReedMullerCode.Codes
 {
     public class CommunicationRunner
     {
