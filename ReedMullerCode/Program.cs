@@ -6,6 +6,7 @@ namespace ReedMullerCode
     {
         public static void Main(string[] args)
         {
+
         }
     }
 }

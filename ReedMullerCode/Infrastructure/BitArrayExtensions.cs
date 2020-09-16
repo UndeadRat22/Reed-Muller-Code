@@ -21,14 +21,14 @@ namespace ReedMullerCode.Infrastructure
             return new BitArray(bits);
         }
 
-        public static BitArray Pad(this BitArray array, int size, bool padLeft = true)
+        public static BitArray Pad(this BitArray array, int size, bool padBit = false, bool padLeft = true)
         {
             if (array.Count >= size)
             {
                 return array;
             }
 
-            var padding = Enumerable.Repeat(false, size - array.Count);
+            var padding = Enumerable.Repeat(padBit, size - array.Count);
 
             var resultBits = padLeft
                 ? padding.Concat(array.AsEnumerable())
