@@ -9,20 +9,24 @@ namespace ReedMullerCode.Codes
         public BitArray BitArray { get; set; }
 
         public Vector Add(Vector other)
-            => new Vector { BitArray = BitArray.Xor(other.BitArray) };
+            => new Vector { BitArray = BitArray.Xor(other.BitArray, true) };
+
+        public Vector Multiply(Vector other)
+            => new Vector { BitArray = BitArray.And(other.BitArray, true) };
 
         public Vector Complement()
         {
+            var bits = BitArray.AsEnumerable()
+                .Select(bit => !bit)
+                .ToArray();
+            
             return new Vector
             {
-                BitArray = new BitArray(BitArray
-                    .AsEnumerable()
-                    .Select(bit => !bit)
-                    .ToArray())
+                BitArray = new BitArray(bits)
             };
         }
 
-        public bool Multiply(Vector other)
+        public bool DotProduct(Vector other)
         {
             var productVector = Add(other);
             return productVector.BitArray.AsEnumerable()

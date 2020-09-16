@@ -9,16 +9,12 @@ namespace ReedMullerCode.Infrastructure
     {
         public static BitArray Xor(this BitArray left, BitArray right, bool padLeft = true)
         {
-            var size = Math.Max(left.Count, right.Count);
-            var paddedLeft = left.Pad(size);
-            var paddedRight = right.Pad(size);
+            return PerformBitwiseOperation(left, right, pair => pair.a ^ pair.b, padLeft);
+        }
 
-
-            var bits = paddedLeft.AsEnumerable().Zip(paddedRight.AsEnumerable())
-                .Select(pair => pair.First ^ pair.Second)
-                .ToArray();
-
-            return new BitArray(bits);
+        public static BitArray And(this BitArray left, BitArray right, bool padLeft = true)
+        {
+            return PerformBitwiseOperation(left, right, pair => pair.a && pair.b, padLeft);
         }
 
         public static BitArray Pad(this BitArray array, int size, bool padBit = false, bool padLeft = true)
@@ -40,5 +36,24 @@ namespace ReedMullerCode.Infrastructure
 
         public static IEnumerable<bool> AsEnumerable(this BitArray array) 
             => array.Cast<bool>();
+
+
+        private static BitArray PerformBitwiseOperation(
+            BitArray left,
+            BitArray right,
+            Func<(bool a, bool b), bool> operation, 
+            bool padLeft = true)
+        {
+            var size = Math.Max(left.Count, right.Count);
+            var paddedLeft = left.Pad(size, padLeft);
+            var paddedRight = right.Pad(size, padLeft);
+
+
+            var bits = paddedLeft.AsEnumerable().Zip(paddedRight.AsEnumerable())
+                .Select(operation)
+                .ToArray();
+
+            return new BitArray(bits);
+        }
     }
 }
