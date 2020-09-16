@@ -18,7 +18,7 @@ namespace ReedMullerCode.Codes
         public BitArray Pass(BitArray data)
         {
             var resultBits = data
-                .Cast<bool>()
+                .AsEnumerable()
                 .Select(bit => _random.NextDouble() < _distortionProbability ? bit : !bit)
                 .ToArray();
 

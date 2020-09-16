@@ -9,6 +9,7 @@ namespace ReedMullerCode.Codes
 
         public BitArray Encode(byte[] bytes)
         {
+
             return null;
         }
     }
