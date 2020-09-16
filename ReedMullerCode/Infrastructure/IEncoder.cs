@@ -1,7 +1,9 @@
-﻿namespace ReedMullerCode.Infrastructure
+﻿using System.Collections;
+
+namespace ReedMullerCode.Infrastructure
 {
     public interface IEncoder
     {
-        public byte[] Encode()
+        public BitArray Encode(byte[] bytes);
     }
 }
