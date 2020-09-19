@@ -19,6 +19,18 @@ namespace Communication.Codes
             BitArray = new BitArray(bits.ToArray());
         }
 
+        public Vector(string bitString) : this(bitString.Select(c => c == '1')) { }
+
+        /// <summary>
+        /// Gets the i'th bit of the vector
+        /// </summary>
+        /// <param name="i">index of bit to return</param>
+        /// <returns>i'th bit</returns>
+        public bool this[int i] => BitArray[i];
+
+        public int Size => BitArray.Length;
+
+
         public Vector Add(Vector other)
             => new Vector(BitArray.Xor(other.BitArray, true));
 
@@ -62,6 +74,13 @@ namespace Communication.Codes
         public static Vector Zero(int size) => new Vector(Enumerable.Repeat(false, size));
         public static Vector One(int size) => new Vector(Enumerable.Repeat(true, size));
 
+
+        /// <summary>
+        /// Syntactic sugar for assigning a string as a vector like so
+        /// Vector v = "10101010";
+        /// </summary>
+        /// <param name="bitString">the bit string</param>
+        public static implicit operator Vector(string bitString) => new Vector(bitString);
 
         public override string ToString() => 
             string.Join("", BitArray.AsEnumerable().Select(b => b ? "1" : "0"));

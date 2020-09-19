@@ -1,4 +1,9 @@
-﻿namespace Communication.Codes.ReedMuller
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Communication.Infrastructure;
+
+namespace Communication.Codes.ReedMuller
 {
     public class ReedMullerEncoder : IEncoder
     {
@@ -15,14 +20,24 @@
         /// <returns>Bytes encoded as a message</returns>
         public Message Encode(byte[] bytes)
         {
-            //var bits = new BitArray(bytes);
-            //var bitArray = bits.AsEnumerable().ToArray();
-            ////unencoded chunks
-            //var chunks = bitArray.Chunk(VectorSize)
-            //    .Select(chunk => new BitArray(chunk));
+            var rawMessageVectors = EnumerateBytesAsVectors(bytes);
+            var encodedVectors = rawMessageVectors
+                .Select(vector => _generatorMatrix.Multiply(vector))
+                .ToArray();
 
+            return new Message
+            {
+                Vectors = encodedVectors
+            };
+        }
 
-            return null;
+        private IEnumerable<Vector> EnumerateBytesAsVectors(byte[] bytes)
+        {
+            var bitArray = new BitArray(bytes);
+            var bits = bitArray.AsEnumerable().ToArray();
+            return bits
+                .Chunk(_generatorMatrix.WordSize)
+                .Select(chunk => new Vector(chunk));
         }
     }
 }

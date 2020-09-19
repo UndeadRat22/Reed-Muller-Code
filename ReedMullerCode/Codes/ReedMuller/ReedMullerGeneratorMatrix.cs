@@ -10,7 +10,8 @@ namespace Communication.Codes.ReedMuller
         public int R { get; set; }
         public int M { get; set; }
         public int VectorSize => (int)BigInteger.Pow(2, M);
-        public Vector[] Vectors { get; private set; }
+        public int WordSize => Rows.First().Size;
+        public Vector[] Rows { get; private set; }
         public ReedMullerGeneratorMatrix(int r, int m)
         {
             M = m;
@@ -40,11 +41,11 @@ namespace Communication.Codes.ReedMuller
                 var productVectors = vectorCombinations
                     .Select(combination => combination
                         .Aggregate(Vector.One(VectorSize), (acc, v) => acc.Multiply(v)));
-                Vectors = baseVectors.Concat(productVectors).ToArray();
+                Rows = baseVectors.Concat(productVectors).ToArray();
             }
             else
             {
-                Vectors = baseVectors;
+                Rows = baseVectors;
             }
         }
 
@@ -78,7 +79,8 @@ namespace Communication.Codes.ReedMuller
         /// <returns>a vector the size of any given matrix vector</returns>
         public Vector Multiply(Vector vector)
         {
-
+            return Rows.Select((row, index) => row.Multiply(vector[index]))
+                .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
         }
     }
 }
