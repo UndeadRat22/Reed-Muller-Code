@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReedMullerCode\ReedMullerCode.csproj" />
+    <ProjectReference Include="..\ReedMullerCode\Communication.csproj" />
   </ItemGroup>
 
 </Project>

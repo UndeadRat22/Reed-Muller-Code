@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using Communication.Codes.ReedMuller;
 using NUnit.Framework;
-using ReedMullerCode.Codes.ReedMuller;
 
 namespace Tests
 {

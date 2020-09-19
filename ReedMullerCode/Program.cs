@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ReedMullerCode
+﻿namespace Communication
 {
     public class Program
     {

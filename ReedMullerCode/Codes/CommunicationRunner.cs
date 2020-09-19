@@ -1,4 +1,4 @@
-﻿namespace ReedMullerCode.Codes
+﻿namespace Communication.Codes
 {
     public class CommunicationRunner
     {

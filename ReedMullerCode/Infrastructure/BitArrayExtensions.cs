@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ReedMullerCode.Infrastructure
+namespace Communication.Infrastructure
 {
     public static class BitArrayExtensions
     {

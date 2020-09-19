@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace ReedMullerCode.Codes.ReedMuller
+﻿namespace Communication.Codes.ReedMuller
 {
     public class ReedMullerEncoder : IEncoder
     {

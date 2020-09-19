@@ -1,4 +1,4 @@
-﻿namespace ReedMullerCode.Infrastructure
+﻿namespace Communication.Infrastructure
 {
     public static class DoubleExtensions
     {

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace ReedMullerCode.Codes
+﻿namespace Communication.Codes
 {
     public interface IEncoder
     {

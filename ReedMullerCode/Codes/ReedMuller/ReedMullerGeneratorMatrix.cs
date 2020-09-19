@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Numerics;
 
-namespace ReedMullerCode.Codes.ReedMuller
+namespace Communication.Codes.ReedMuller
 {
     public class ReedMullerGeneratorMatrix
     {

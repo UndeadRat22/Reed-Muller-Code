@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ReedMullerCode.Infrastructure
+namespace Communication.Infrastructure
 {
     public static class ArrayExtensions
     {
