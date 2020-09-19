@@ -18,6 +18,10 @@ namespace Communication.Codes.ReedMuller
             Generate();
         }
 
+
+        /// <summary>
+        /// Generates the GRM matrix vectors
+        /// </summary>
         private void Generate()
         {
             var baseVectors = GenerateBaseVectors().ToArray();
@@ -65,6 +69,16 @@ namespace Communication.Codes.ReedMuller
 
                 yield return new Vector(vectorBits);
             }
+        }
+
+        /// <summary>
+        /// Multiplies the matrix by a vector the size of matrix height
+        /// </summary>
+        /// <param name="vector">vector to multiply the matrix with</param>
+        /// <returns>a vector the size of any given matrix vector</returns>
+        public Vector Multiply(Vector vector)
+        {
+
         }
     }
 }

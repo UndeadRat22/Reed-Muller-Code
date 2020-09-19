@@ -22,9 +22,25 @@ namespace Communication.Codes
         public Vector Add(Vector other)
             => new Vector(BitArray.Xor(other.BitArray, true));
 
+        /// <summary>
+        /// performs 'and' logical operation on bits in corresponding positions:
+        /// 1010 & 1100 = 1000
+        /// </summary>
+        /// <param name="other">vector to and with</param>
         public Vector Multiply(Vector other)
             => new Vector(BitArray.And(other.BitArray, true));
 
+        /// <summary>
+        /// Multiplies bits by a given scalar.
+        /// In other words, returns either 0 or the same vector
+        /// </summary>
+        /// <param name="scalar">the scalar to multiply with</param>
+        public Vector Multiply(bool scalar)
+            => scalar ? this : Vector.Zero(BitArray.Length);
+        
+        /// <summary>
+        /// Produces the inverse of the vector.
+        /// </summary>
         public Vector Complement()
         {
             var bits = BitArray.AsEnumerable()
@@ -32,7 +48,9 @@ namespace Communication.Codes
 
             return new Vector(bits);
         }
-
+        /// <summary>
+        /// Produces the dot product for vector with given vector.
+        /// </summary>
         public bool DotProduct(Vector other)
         {
             var productVector = Add(other);

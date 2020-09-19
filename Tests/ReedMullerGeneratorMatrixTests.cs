@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Communication.Codes.ReedMuller;
@@ -45,10 +43,10 @@ namespace Tests
         }
 
         [Test]
-        //[Ignore("test for debugging")]
+        [Ignore("test for debugging")]
         public void Test()
         {
-            var matrix = new ReedMullerGeneratorMatrix(2, 3);
+            var matrix = new ReedMullerGeneratorMatrix(2, 4);
 
             var result = matrix.Vectors.Select(v => v.ToString()).ToList();
         }
