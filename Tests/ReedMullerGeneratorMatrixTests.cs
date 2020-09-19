@@ -19,7 +19,7 @@ namespace Tests
             //Act
             var matrix = new ReedMullerGeneratorMatrix(0, m);
             //Assert
-            Assert.AreEqual(1, matrix.Rows.Count);
+            Assert.AreEqual(1, matrix.Rows.Length);
             Assert.AreEqual((int)BigInteger.Pow(2, m), matrix.Rows.Single().Value.Size);
         }
         [Test]
@@ -29,8 +29,8 @@ namespace Tests
             //Act
             var matrix = new ReedMullerGeneratorMatrix(1, 1);
             //Assert
-            Assert.AreEqual("10", matrix.Rows[new[] { 1 }].ToString());
-            Assert.AreEqual(2, matrix.Rows.Count);
+            Assert.AreEqual("10", matrix[1].Value.ToString());
+            Assert.AreEqual(2, matrix.Rows.Length);
         }
         [Test]
         public void OneRMatrixGeneratesAlternatingVectors2()
@@ -39,9 +39,9 @@ namespace Tests
             //Act
             var matrix = new ReedMullerGeneratorMatrix(1, 2);
             //Assert
-            Assert.AreEqual("1100", matrix.Rows[new []{ 1 }].ToString());
-            Assert.AreEqual("1010", matrix.Rows[new []{ 2 }].ToString());
-            Assert.AreEqual(3, matrix.Rows.Count);
+            Assert.AreEqual("1100", matrix[1].Value.ToString());
+            Assert.AreEqual("1010", matrix[2].Value.ToString());
+            Assert.AreEqual(3, matrix.Rows.Length);
         }
 
         [Test]

@@ -11,13 +11,16 @@ namespace Communication.Codes.ReedMuller
         public int M { get; set; }
         public int VectorSize => (int)BigInteger.Pow(2, M);
         public int WordSize => Rows.First().Value.Size;
-        public Dictionary<int[], Vector> Rows { get; private set; }
+        public MatrixVector[] Rows { get; private set; }
         public ReedMullerGeneratorMatrix(int r, int m)
         {
             M = m;
             R = r;
             Generate();
         }
+
+        public MatrixVector this[params int[] index] 
+            => Rows.First(row => row.HasKey(index));
 
 
         /// <summary>
@@ -41,15 +44,15 @@ namespace Communication.Codes.ReedMuller
                 //also keep track of the indices used for the creation of vectors;
                 var productVectors = vectorCombinations
                     .Select(combination => combination
-                        .Aggregate(new KeyValuePair<int[], Vector>(new int[]{}, Vector.One(VectorSize)), 
+                        .Aggregate(new MatrixVector(new int[]{}, Vector.One(VectorSize)), 
                             (acc, v) => 
-                                new KeyValuePair<int[], Vector>(acc.Key.Concat(v.Key).ToArray(), acc.Value.Multiply(v.Value))));
+                                new MatrixVector(acc.Key.Concat(v.Key).ToArray(), acc.Value.Multiply(v.Value))));
 
-                Rows = new Dictionary<int[], Vector>(baseVectors.Concat(productVectors), new ArrayValueComparer<int>());
+                Rows = baseVectors.Concat(productVectors).ToArray();
             }
             else
             {
-                Rows = new Dictionary<int[], Vector>(baseVectors, new ArrayValueComparer<int>());
+                Rows = baseVectors;
             }
         }
 
@@ -57,9 +60,10 @@ namespace Communication.Codes.ReedMuller
         /// Generates the base vectors to generate the matrix with;
         /// </summary>
         /// <returns>indexed base vectors</returns>
-        private IEnumerable<KeyValuePair<int[], Vector>> GenerateBaseVectors()
+        private IEnumerable<MatrixVector> GenerateBaseVectors()
         {
-            yield return new KeyValuePair<int[], Vector>(new []{ 0 }, Vector.One(VectorSize));
+            var vectors = new MatrixVector(new []{ 0 }, Vector.One(VectorSize));
+            yield return vectors;
             if (R == 0)
             {
                 yield break;
@@ -74,7 +78,8 @@ namespace Communication.Codes.ReedMuller
                 var vectorBits = Enumerable.Repeat(elem, VectorSize / (currentSize << 1))
                     .SelectMany(x => x);
 
-                yield return new KeyValuePair<int[], Vector>(new[] {++index}, new Vector(vectorBits));
+                var vector = new MatrixVector(new[] { ++index }, new Vector(vectorBits));
+                yield return vector;
             }
         }
 
@@ -87,6 +92,22 @@ namespace Communication.Codes.ReedMuller
         {
             return Rows.Select((row, index) => row.Value.Multiply(vector[index]))
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
+        }
+
+        public class MatrixVector
+        {
+            public int[] Key { get; set; }
+            public Vector Value { get; set; }
+            public MatrixVector(int[] key, Vector value)
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public bool HasKey(params int[] key)
+            {
+                return key.Length == Key.Length && Key.All(key.Contains);
+            }
         }
     }
 }
