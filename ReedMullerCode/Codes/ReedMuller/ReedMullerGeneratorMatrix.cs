@@ -50,9 +50,9 @@ namespace Communication.Codes.ReedMuller
         /// <returns>Base vectors</returns>
         private IEnumerable<Vector> GenerateBaseVectors()
         {
+            yield return Vector.One(VectorSize);
             if (R == 0)
             {
-                yield return Vector.One(VectorSize);
                 yield break;
             }
             for (var currentSize = VectorSize >> 1; currentSize >= 1; currentSize >>= 1)
