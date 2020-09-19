@@ -5,11 +5,11 @@ namespace Communication.Codes.ReedMuller
 {
     public class ReedMullerGeneratorMatrix
     {
-        public int M { get; set; }
         public int R { get; set; }
-        public int N => 2 << M;
+        public int M { get; set; }
+        public int VectorSize => 2 << M;
         public Vector[] Vectors { get; private set; }
-        public ReedMullerGeneratorMatrix(int m, int r)
+        public ReedMullerGeneratorMatrix(int r, int m)
         {
             M = m;
             R = r;
@@ -18,33 +18,31 @@ namespace Communication.Codes.ReedMuller
 
         private void Generate()
         {
-            var vectorSize = N;
-            //generate matrix akin to
-            //0000 1111
-            //0011 0011
-            //0101 0101
-            var vectors = new List<Vector>
+            if (R == 0)
             {
-                Vector.One(vectorSize),
-                Vector.Zero(vectorSize)
+                Vectors = new[] {Vector.One(VectorSize)};
+                return;
+            }
+            var baseVectors = new List<Vector>
+            {
+                Vector.One(VectorSize)
             };
-            for (var currentSize = vectorSize >> 1; currentSize >= 1; currentSize >>= 1)
+            for (var currentSize = VectorSize >> 1; currentSize >= 1; currentSize >>= 1)
             {
-                //0000
-                var onePart= Enumerable.Repeat(true, currentSize);
-                //1111
-                var zeroPart= Enumerable.Repeat(false, currentSize);
-                //0000 1111
+                var onePart = Enumerable.Repeat(true, currentSize);
+                var zeroPart = Enumerable.Repeat(false, currentSize);
                 var elem = onePart.Concat(zeroPart).ToArray();
-
-                var vectorBits = Enumerable.Repeat(elem, vectorSize / (currentSize << 1))
+                var vectorBits = Enumerable.Repeat(elem, VectorSize / (currentSize << 1))
                     .SelectMany(x => x);
 
-                vectors.Add(new Vector(vectorBits));
+                baseVectors.Add(new Vector(vectorBits));
             }
+            //base vectors are (1111 1111), (1111 0000), (1100, 1100), (1010 1010) for m = 3 after the loop
+            //the next step is to generate the full generator matrix using (r) products with the base vectors
+            //i.e. if r = 2, then 
 
-            Vectors = vectors.ToArray();
+            Vectors = baseVectors.ToArray();
+
         }
-
     }
 }

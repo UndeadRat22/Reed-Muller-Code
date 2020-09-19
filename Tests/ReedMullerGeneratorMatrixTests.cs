@@ -8,15 +8,18 @@ namespace Tests
 {
     public class ReedMullerGeneratorMatrixTests
     {
-        [Test]
-        public void Test1()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void ZeroRMatrixReturnsOnlyOneVector(int m)
         {
             //Arrange
             //Act
-            var matrix = new ReedMullerGeneratorMatrix(3, 4);
+            var matrix = new ReedMullerGeneratorMatrix(0, m);
             //Assert
-            var vs = matrix.Vectors.Select(x => x.ToString())
-                .ToList();
+            Assert.AreEqual(1, matrix.Vectors.Length);
+            Assert.AreEqual(2 << m, matrix.Vectors.Single().BitArray.Length);
         }
     }
 }
