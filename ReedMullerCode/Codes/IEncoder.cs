@@ -4,6 +4,6 @@ namespace ReedMullerCode.Codes
 {
     public interface IEncoder
     {
-        public BitArray Encode(byte[] bytes);
+        public Message Encode(byte[] bytes);
     }
 }

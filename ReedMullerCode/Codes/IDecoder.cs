@@ -4,6 +4,6 @@ namespace ReedMullerCode.Codes
 {
     public interface IDecoder
     {
-        public byte[] Decode(BitArray bits);
+        public byte[] Decode(Message bits);
     }
 }
