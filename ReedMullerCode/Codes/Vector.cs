@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using ReedMullerCode.Infrastructure;
 
@@ -8,22 +9,28 @@ namespace ReedMullerCode.Codes
     {
         public BitArray BitArray { get; set; }
 
+        public Vector(BitArray bitArray)
+        {
+            BitArray = bitArray;
+        }
+
+        public Vector(IEnumerable<bool> bits)
+        {
+            BitArray = new BitArray(bits.ToArray());
+        }
+
         public Vector Add(Vector other)
-            => new Vector { BitArray = BitArray.Xor(other.BitArray, true) };
+            => new Vector(BitArray.Xor(other.BitArray, true));
 
         public Vector Multiply(Vector other)
-            => new Vector { BitArray = BitArray.And(other.BitArray, true) };
+            => new Vector(BitArray.And(other.BitArray, true));
 
         public Vector Complement()
         {
             var bits = BitArray.AsEnumerable()
-                .Select(bit => !bit)
-                .ToArray();
-            
-            return new Vector
-            {
-                BitArray = new BitArray(bits)
-            };
+                .Select(bit => !bit);
+
+            return new Vector(bits);
         }
 
         public bool DotProduct(Vector other)
@@ -32,6 +39,13 @@ namespace ReedMullerCode.Codes
             return productVector.BitArray.AsEnumerable()
                 .Aggregate(false, (agg, bit) => agg ^ bit);
         }
-    }
 
+
+        public static Vector Zero(int size) => new Vector(Enumerable.Repeat(false, size));
+        public static Vector One(int size) => new Vector(Enumerable.Repeat(true, size));
+
+
+        public override string ToString() => 
+            string.Join("", BitArray.AsEnumerable().Select(b => b ? "1" : "0"));
+    }
 }

@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Numerics;
-using ReedMullerCode.Infrastructure;
+﻿using System.Numerics;
 
-namespace ReedMullerCode.Codes
+namespace ReedMullerCode.Codes.ReedMuller
 {
     public class ReedMullerEncoder : IEncoder
     {
-        public int R { get; set; }
-        public int M { get; set; }
+        private readonly ReedMullerGeneratorMatrix _generatorMatrix;
         public ReedMullerEncoder(int r, int m)
         {
-            R = r;
-            M = m;
+            _generatorMatrix = new ReedMullerGeneratorMatrix(r, m);
         }
 
-        private int VectorSize => (int)BigInteger.Pow(2, R);
-        
         /// <summary>
         /// Encodes given bytes as a message using the Reed-Muller Code
         /// </summary>
