@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Communication.Infrastructure;
+using Communication.Infrastructure.Collections;
 
 namespace Communication.Codes.ReedMuller
 {
@@ -31,10 +31,10 @@ namespace Communication.Codes.ReedMuller
             };
         }
 
-        private IEnumerable<Vector> EnumerateBytesAsVectors(byte[] bytes)
+        private IEnumerable<Vector> EnumerateBytesAsVectors(IEnumerable<byte> bytes)
         {
             var bitArray = new BitArray(bytes);
-            var bits = bitArray.AsEnumerable().ToArray();
+            var bits = bitArray.ToArray();
             return bits
                 .Chunk(_generatorMatrix.WordSize)
                 .Select(chunk => new Vector(chunk));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Communication.Infrastructure;
@@ -14,7 +15,7 @@ namespace Communication.Codes.ReedMuller
         public MatrixVector[] Rows { get; private set; }
 
         //Characteristic vector lookup map
-        private readonly Dictionary<int[], Vector> _characteristicVectors = new Dictionary<int[], Vector>(new ArrayValueComparer<int>());
+        private readonly Dictionary<int[], Vector[]> _characteristicVectors = new Dictionary<int[], Vector[]>(new ArrayValueComparer<int>());
         public ReedMullerGeneratorMatrix(int r, int m)
         {
             M = m;
@@ -96,35 +97,48 @@ namespace Communication.Codes.ReedMuller
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
         }
 
-        public IEnumerable<Vector> GetCharacteristicVectorsFor(int[] key)
+        /// <summary>
+        /// Finds the characteristic vectors in the dictionary, or if doesn't exist
+        /// calculates them and adds it to the dictionary.
+        /// </summary>
+        /// <param name="key">the key of the vector</param>
+        /// <returns>characteristic vectors for any given vector key</returns>
+        public Vector[] GetCharacteristicVectorsFor(int[] key)
         {
+            var contains = _characteristicVectors.TryGetValue(key, out var result);
+            if (contains) return result;
             var matrixVector = this[key];
             var indices = matrixVector.GetCharacteristicVectorIndices(M);
-            //need inversed vectors too.
+            //need vector complements too.
             var characteristicVectorKeyCombinations = indices
                 .SelectMany(index => new[] {index, -index})
-                .GetCombinations(indices.Length)
+                .GetCombinations(Math.Min(indices.Length, R))
                 .Select(c => c.ToArray())
-                .Where(c => c.All(e => !c.Contains(-e))); //filter out keys like x1!(x1);
+                .Where(c => c.All(e => !c.Contains(-e)))
+                .ToArray(); //filter out keys like x1!(x1);
 
+            var vectors = new List<Vector>();
             foreach (var comb in characteristicVectorKeyCombinations)
             {
-                var contains = _characteristicVectors.TryGetValue(comb, out var vector);
-                if (contains) yield return vector;
-                else
+                var vectorToAdd = Vector.One(VectorSize);
+                foreach (var index in comb)
                 {
-                    var result = Vector.One(VectorSize);
-                    foreach (var index in comb)
-                    {
-                        var isInverse = index < 0;
-                        vector = this[isInverse ? -index : index].Value;
-                        vector = isInverse ? vector.Complement() : vector;
-                        result = result.Multiply(vector);
-                    }
-                    _characteristicVectors.Add(comb, result);
-                    yield return result;
+                    var isInverse = index < 0;
+                    var vector = this[isInverse ? -index : index].Value;
+                    vector = isInverse ? vector.Complement() : vector;
+                    vectorToAdd = vectorToAdd.Multiply(vector);
                 }
+                vectors.Add(vectorToAdd);
             }
+            _characteristicVectors.Add(key, result = vectors.ToArray());
+
+            return result;
+        }
+
+        public IOrderedEnumerable<IGrouping<int, MatrixVector>> GetRowsGroupedByComplexity(bool skipIdentity = true)
+        {
+            var rows = (skipIdentity ? Rows.Skip(1) : Rows).Reverse().ToArray();
+            return rows.GroupBy(row => row.Key.Length).OrderByDescending(grouping => grouping.Key);
         }
 
         public class MatrixVector

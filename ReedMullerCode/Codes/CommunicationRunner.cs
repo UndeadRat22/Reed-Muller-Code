@@ -16,9 +16,8 @@
 
         public void Run(byte[] data)
         {
-            var startingMessage= _encoder.Encode(data);
-            //var finalizedMessage = _channel.Pass(startingMessage);
-            //var result = _decoder.Decode(finalizedMessage);
+            var startingMessage = _encoder.Encode(data);
+            var result = _decoder.Decode(startingMessage);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Communication.Infrastructure;
+using Communication.Infrastructure.Collections;
 
 namespace Communication.Codes
 {
@@ -16,7 +16,7 @@ namespace Communication.Codes
 
         public Vector(IEnumerable<bool> bits)
         {
-            BitArray = new BitArray(bits.ToArray());
+            BitArray = new BitArray(bits.ToList());
         }
 
         public Vector(string bitString) : this(bitString.Select(c => c == '1')) { }
@@ -28,7 +28,7 @@ namespace Communication.Codes
         /// <returns>i'th bit</returns>
         public bool this[int i] => BitArray[i];
 
-        public int Size => BitArray.Length;
+        public int Size => BitArray.Count;
 
 
         public Vector Add(Vector other)
@@ -48,14 +48,14 @@ namespace Communication.Codes
         /// </summary>
         /// <param name="scalar">the scalar to multiply with</param>
         public Vector Multiply(bool scalar)
-            => scalar ? this : Vector.Zero(BitArray.Length);
+            => scalar ? this : Vector.Zero(BitArray.Count);
         
         /// <summary>
         /// Produces the inverse of the vector.
         /// </summary>
         public Vector Complement()
         {
-            var bits = BitArray.AsEnumerable()
+            var bits = BitArray
                 .Select(bit => !bit);
 
             return new Vector(bits);
@@ -65,9 +65,10 @@ namespace Communication.Codes
         /// </summary>
         public bool DotProduct(Vector other)
         {
-            var productVector = Add(other);
-            return productVector.BitArray.AsEnumerable()
-                .Aggregate(false, (agg, bit) => agg ^ bit);
+            return Multiply(other).BitArray.Any(b => b);
+            //var productVector = Add(other);
+            //return productVector.BitArray.AsEnumerable()
+            //    .Aggregate(false, (agg, bit) => agg ^ bit);
         }
 
 
@@ -83,6 +84,6 @@ namespace Communication.Codes
         public static implicit operator Vector(string bitString) => new Vector(bitString);
 
         public override string ToString() => 
-            string.Join("", BitArray.AsEnumerable().Select(b => b ? "1" : "0"));
+            string.Join("", BitArray.Select(b => b ? "1" : "0"));
     }
 }

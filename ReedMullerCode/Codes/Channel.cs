@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using Communication.Infrastructure;
+using Communication.Infrastructure.Collections;
 
 namespace Communication.Codes
 {
@@ -18,7 +18,6 @@ namespace Communication.Codes
         public BitArray Pass(BitArray data)
         {
             var resultBits = data
-                .AsEnumerable()
                 .Select(bit => _random.NextDouble() < _distortionProbability ? bit : !bit)
                 .ToArray();
 

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using Communication.Infrastructure.Collections;
 
 namespace Communication.Infrastructure
 {
@@ -27,16 +26,11 @@ namespace Communication.Infrastructure
             var padding = Enumerable.Repeat(padBit, size - array.Count);
 
             var resultBits = padLeft
-                ? padding.Concat(array.AsEnumerable())
-                : array.AsEnumerable().Concat(padding);
+                ? padding.Concat(array)
+                : array.Concat(padding);
 
             return new BitArray(resultBits.ToArray());
         }
-
-
-        public static IEnumerable<bool> AsEnumerable(this BitArray array) 
-            => array.Cast<bool>();
-
 
         private static BitArray PerformBitwiseOperation(
             BitArray left,
@@ -49,7 +43,7 @@ namespace Communication.Infrastructure
             var paddedRight = right.Pad(size, padLeft);
 
 
-            var bits = paddedLeft.AsEnumerable().Zip(paddedRight.AsEnumerable())
+            var bits = paddedLeft.Zip(paddedRight)
                 .Select(operation)
                 .ToArray();
 

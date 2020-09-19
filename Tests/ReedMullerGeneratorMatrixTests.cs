@@ -68,6 +68,27 @@ namespace Tests
         }
 
         [Test]
+        public void GetCharacteristicVectorsReturns2VectorsInRM23()
+        {
+            //Arrange
+            var matrix = new ReedMullerGeneratorMatrix(2, 3);
+            //Act
+            var vectors = matrix.GetCharacteristicVectorsFor(new[] { 1, 2 }).ToArray();
+            //Assert
+            Assert.AreEqual(2, vectors.Length);
+        }
+
+        [Test]
+        public void CharacteristicVectorsReturnsAllVectorsInRM34()
+        {
+            //Arrange
+            var matrix = new ReedMullerGeneratorMatrix(1, 3);
+            //Act
+            var vectors = matrix.GetCharacteristicVectorsFor(new[] { 1 }).ToArray();
+            //Assert
+        }
+
+        [Test]
         //[Ignore("test for debugging")]
         public void Test()
         {
