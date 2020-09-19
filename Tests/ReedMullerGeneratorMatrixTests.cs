@@ -57,6 +57,17 @@ namespace Tests
         }
 
         [Test]
+        public void GetCharacteristicVectorsReturns4VectorsInRM23()
+        {
+            //Arrange
+            var matrix = new ReedMullerGeneratorMatrix(2, 3);
+            //Act
+            var vectors = matrix.GetCharacteristicVectorsFor(new []{1}).ToArray();
+            //Assert
+            Assert.AreEqual(4, vectors.Length);
+        }
+
+        [Test]
         //[Ignore("test for debugging")]
         public void Test()
         {

@@ -12,6 +12,9 @@ namespace Communication.Codes.ReedMuller
         public int VectorSize => (int)BigInteger.Pow(2, M);
         public int WordSize => Rows.First().Value.Size;
         public MatrixVector[] Rows { get; private set; }
+
+        //Characteristic vector lookup map
+        private readonly Dictionary<int[], Vector> _characteristicVectors = new Dictionary<int[], Vector>(new ArrayValueComparer<int>());
         public ReedMullerGeneratorMatrix(int r, int m)
         {
             M = m;
@@ -19,9 +22,8 @@ namespace Communication.Codes.ReedMuller
             Generate();
         }
 
-        public MatrixVector this[params int[] index] 
+        public MatrixVector this[params int[] index]
             => Rows.First(row => row.HasKey(index));
-
 
         /// <summary>
         /// Generates the GRM matrix vectors
@@ -94,6 +96,37 @@ namespace Communication.Codes.ReedMuller
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
         }
 
+        public IEnumerable<Vector> GetCharacteristicVectorsFor(int[] key)
+        {
+            var matrixVector = this[key];
+            var indices = matrixVector.GetCharacteristicVectorIndices(M);
+            //need inversed vectors too.
+            var characteristicVectorKeyCombinations = indices
+                .SelectMany(index => new[] {index, -index})
+                .GetCombinations(indices.Length)
+                .Select(c => c.ToArray())
+                .Where(c => c.All(e => !c.Contains(-e))); //filter out keys like x1!(x1);
+
+            foreach (var comb in characteristicVectorKeyCombinations)
+            {
+                var contains = _characteristicVectors.TryGetValue(comb, out var vector);
+                if (contains) yield return vector;
+                else
+                {
+                    var result = Vector.One(VectorSize);
+                    foreach (var index in comb)
+                    {
+                        var isInverse = index < 0;
+                        vector = this[isInverse ? -index : index].Value;
+                        vector = isInverse ? vector.Complement() : vector;
+                        result = result.Multiply(vector);
+                    }
+                    _characteristicVectors.Add(comb, result);
+                    yield return result;
+                }
+            }
+        }
+
         public class MatrixVector
         {
             public int[] Key { get; set; }
@@ -107,6 +140,13 @@ namespace Communication.Codes.ReedMuller
             public bool HasKey(params int[] key)
             {
                 return key.Length == Key.Length && Key.All(key.Contains);
+            }
+
+            public int[] GetCharacteristicVectorIndices(int m)
+            {
+                return Enumerable.Range(1, m)
+                    .Except(Key)
+                    .ToArray();
             }
         }
     }
