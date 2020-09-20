@@ -26,12 +26,12 @@ namespace Communication.Codes
         /// <param name="data"></param>
         public void Run(byte[] data)
         {
-            var startingMessage = _encoder.Encode(data, true);
-            _writer.WriteLine(startingMessage.ToString());
+            //var startingMessage = _encoder.Encode(data, true);
+            //_writer.WriteLine(startingMessage.ToString());
 
-            var result = _decoder.Decode(startingMessage);
-            var resultString = Encoding.ASCII.GetString(result);
-            _writer.WriteLine(resultString);
+            //var result = _decoder.Decode(startingMessage);
+            //var resultString = Encoding.ASCII.GetString(result);
+            //_writer.WriteLine(resultString);
         }
     }
 }

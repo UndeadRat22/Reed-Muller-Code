@@ -34,5 +34,21 @@ namespace Communication.Infrastructure
                 ++i;
             }
         }
+
+        public static IEnumerable<T> Pad<T>(this IEnumerable<T> items, T padding, int size)
+        {
+            var count = 0;
+            foreach (var item in items)
+            {
+                count++;
+                yield return item;
+            }
+
+            while (count < size)
+            {
+                count++;
+                yield return padding;
+            }
+        }
     }
 }

@@ -15,14 +15,19 @@ namespace Communication.Codes
 
         private readonly Random _random = new Random((int)DateTime.Now.Ticks);
         private double _distortionProbability;
-        public BitArray Pass(BitArray data)
+        public Message Pass(Message data)
         {
-            var resultBits = data
-                .Select(bit => _random.NextDouble() < _distortionProbability ? bit : !bit)
-                .ToArray();
+            var distortedVectors = data.Vectors.Select(Distort).ToArray();
+            return new Message
+            {
+                Vectors = distortedVectors
+            };
+        }
 
-            var result = new BitArray(resultBits);
-            return result;
+        private Vector Distort(Vector v)
+        {
+            var distortedBits = v.BitArray.Select(bit => _random.NextDouble() < _distortionProbability ? !bit : bit);
+            return new Vector(distortedBits);
         }
     }
 }

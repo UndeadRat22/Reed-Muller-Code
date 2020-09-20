@@ -12,6 +12,7 @@ namespace Communication.Codes.ReedMuller
         public int R { get; set; }
         public int M { get; set; }
         public int VectorSize => (int)BigInteger.Pow(2, M);
+        public int EncodableVectorSize => Rows.Length;
         public int WordSize => Rows.First().Value.Size;
         public MatrixVector[] Rows { get; private set; }
 

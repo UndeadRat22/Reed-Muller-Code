@@ -8,6 +8,12 @@ namespace Tests.Scenarios
     {
         [TestCase(1, 3, "0110")]
         [TestCase(2, 3, "0111010")]
+        [TestCase(2, 3, "0111011")]
+        [TestCase(2, 3, "1111011")]
+        [TestCase(2, 3, "1010101")]
+        [TestCase(2, 3, "1111111")]
+        [TestCase(2, 3, "1111110")]
+        [TestCase(2, 3, "0111110")]
         [TestCase(2, 4, "01101001010")]
         [TestCase(2, 4, "01101001010")]
         [TestCase(2, 5, "1111111111111111")]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Communication.Infrastructure;
@@ -36,6 +37,30 @@ namespace Communication.Codes.ReedMuller
             return new Message
             {
                 Vectors = encodedVectors
+            };
+        }
+
+        public Message Encode(string bitString, bool log)
+        {
+            return new Message
+            {
+                Vectors = new[] {Encode(bitString)}
+            };
+        }
+
+        public ValidationResult CanEncode(string bitString)
+        {
+            if (bitString.Length != _generatorMatrix.EncodableVectorSize || bitString.Length == 0)
+            {
+                return new ValidationResult
+                {
+                    CanEncode = false,
+                    Message = $"Message length must have a length {_generatorMatrix.EncodableVectorSize}."
+                };
+            }
+            return new ValidationResult
+            {
+                CanEncode = true
             };
         }
 
