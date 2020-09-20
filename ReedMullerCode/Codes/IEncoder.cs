@@ -2,6 +2,6 @@
 {
     public interface IEncoder
     {
-        public Message Encode(byte[] bytes);
+        public Message Encode(byte[] bytes, bool log);
     }
 }

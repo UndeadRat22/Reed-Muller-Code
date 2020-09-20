@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using Communication.Infrastructure;
 
 namespace Communication.Codes.ReedMuller
@@ -139,6 +140,17 @@ namespace Communication.Codes.ReedMuller
         {
             var rows = (skipIdentity ? Rows.Skip(1) : Rows).Reverse().ToArray();
             return rows.GroupBy(row => row.Key.Length).OrderByDescending(grouping => grouping.Key);
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var row in Rows)
+            {
+                var key = string.Join(",",row.Key.Select(p => p.ToString()));
+                sb.AppendLine($"x[{key}]:{row.Value}");
+            }
+            return sb.ToString();
         }
 
         public class MatrixVector

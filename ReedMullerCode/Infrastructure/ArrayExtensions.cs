@@ -20,5 +20,15 @@ namespace Communication.Infrastructure
                 yield return source.Slice(i * size, size);
             }
         }
+
+        public static byte ToByte(this bool[] values)
+        {
+            byte result = 0;
+            for (var i = 0; i < 8; i++)
+            {
+                if (values[i]) result |= (byte) (1 << i);
+            }
+            return result;
+        }
     }
 }

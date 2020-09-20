@@ -15,10 +15,13 @@ namespace Communication.Codes.ReedMuller
 
         public byte[] Decode(Message bits)
         {
-            var vector = bits.Vectors.First();
-            
+            var decoded = bits.Vectors.Select(Decode).ToArray();
+            var bitArray = decoded.SelectMany(s => s).Select(c => c == '1').ToArray();
+            var bytes = bitArray.Chunk(8)
+                .Select(chunk => chunk.ToByte())
+                .ToArray();
 
-            return null;
+            return bytes;
         }
 
         public string Decode(Vector vector)

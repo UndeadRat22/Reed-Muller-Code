@@ -1,4 +1,5 @@
-﻿using Communication.Codes;
+﻿using System;
+using Communication.Codes;
 using Communication.Codes.ReedMuller;
 using Communication.Infrastructure.Collections;
 using NUnit.Framework;
@@ -12,7 +13,7 @@ namespace Tests
         public void Foo()
         {
             //Arrange
-            var runner = new CommunicationRunner(new ReedMullerDecoder(2, 3), new ReedMullerEncoder(2, 3), new Channel());
+            var runner = new CommunicationRunner(new ReedMullerDecoder(2, 3), new ReedMullerEncoder(2, 3, Console.Out), new Channel());
             //Act
 
             var bytes = new[] {(byte) 0x55 };
