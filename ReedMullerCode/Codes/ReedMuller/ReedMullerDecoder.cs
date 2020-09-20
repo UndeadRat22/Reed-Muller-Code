@@ -23,37 +23,32 @@ namespace Communication.Codes.ReedMuller
 
         public string Decode(Vector vector)
         {
-            var bitList = new List<bool>();//TODO reverse list after
-            var rowsWithoutIdentity = _generatorMatrix.GetRowsGroupedByComplexity().ToArray();
-            Vector result = null;
-            foreach (var group in rowsWithoutIdentity)
+            //the inverse bitList of the vector;
+            var bitList = new List<bool>();
+            //Get rows from the matrix in reverse order, without the identity row.
+            //The rows are also grouped by 'complexity' (key size)
+            var rows = _generatorMatrix.GetRowsGroupedByComplexity();
+            foreach (var rGroup in rows)
             {
-                var groupBitList = new List<bool>();
-                foreach (var row in group)
+                //this result will have to be added to the given vector, when proceeding to a 'lower' complexity
+                var groupResult = Vector.Zero(_generatorMatrix.WordSize);
+                foreach (var row in rGroup)
                 {
-                    var characteristicVectors = _generatorMatrix.GetCharacteristicVectorsFor(row.Key);
-                    var dotProducts = characteristicVectors.Select(c => vector.DotProduct(c)).ToArray();
-                    //majority vote
-                    var majority = GetMajority(dotProducts);
-                    groupBitList.Add(majority);
-                    var vToAdd = row.Value.Multiply(majority);
-                    result = result == null ? vToAdd : result.Add(vToAdd);
+                    //get characteristic vectors for row.
+                    var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row.Key);
+                    //get majority of 'votes' for row.
+                    var votes = vectors.Select(v => v.DotProduct(vector)).ToArray();
+                    var majority = GetMajority(votes);
+                    //add vector to groupResult based on majority vote;
+                    groupResult = groupResult.Add(row.Value.Multiply(majority));
+                    //save the vote
+                    bitList.Add(majority);
                 }
-                vector = vector.Add(result);
-                bitList.AddRange(groupBitList);
+                //s + u;
+                vector = vector.Add(groupResult);
             }
-            //var rows = _generatorMatrix.Rows.Skip(1).Reverse().ToArray();
-            //Vector result = null;
-            //foreach (var row in rows)
-            //{
-            //    var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row.Key);
-            //    var votes = vectors.Select(v => v.DotProduct(vector)).ToArray();
-            //    var majority = GetMajority(votes);
-            //    bitList.Add(majority);
-            //    var vToAdd = row.Value.Multiply(majority);
-            //    result = result == null ? vToAdd : result.Add(vToAdd);
-            //}
-            ////bitList.Reverse();
+            var majorityCount = GetMajority(vector.BitArray.ToArray());
+            bitList.Add(majorityCount);
             bitList.Reverse();
             return new Vector(bitList).ToString();
         }

@@ -112,7 +112,7 @@ namespace Communication.Codes.ReedMuller
             //need vector complements too.
             var characteristicVectorKeyCombinations = indices
                 .SelectMany(index => new[] {index, -index})
-                .GetCombinations(Math.Min(indices.Length, R))
+                .GetCombinations(indices.Length)
                 .Select(c => c.ToArray())
                 .Where(c => c.All(e => !c.Contains(-e)))
                 .ToArray(); //filter out keys like x1!(x1);
