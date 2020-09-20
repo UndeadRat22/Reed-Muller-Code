@@ -2,6 +2,6 @@
 {
     public interface IDecoder
     {
-        public byte[] Decode(Message bits);
+        public byte[] Decode(Message message);
     }
 }

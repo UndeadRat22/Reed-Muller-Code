@@ -6,6 +6,9 @@ namespace Communication.Codes
     {
         public Vector[] Vectors { get; set; }
 
+        //Utility info
+        public int InitialByteCount { get; set; }
+
         public override string ToString()
         {
             var builder = new StringBuilder();

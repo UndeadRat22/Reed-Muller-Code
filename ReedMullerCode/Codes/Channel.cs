@@ -20,7 +20,8 @@ namespace Communication.Codes
             var distortedVectors = data.Vectors.Select(Distort).ToArray();
             return new Message
             {
-                Vectors = distortedVectors
+                Vectors = distortedVectors,
+                InitialByteCount = data.InitialByteCount
             };
         }
 

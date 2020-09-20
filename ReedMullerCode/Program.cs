@@ -11,7 +11,7 @@ namespace Communication
         {
 
             int r = 2;
-            int m = 3;
+            int m = 5;
             double probability = 0.0;
             Scenario1(r, m, probability);
         }
@@ -53,6 +53,16 @@ namespace Communication
             var decodedMessage = decoder.Decode(new Vector(distortedWithUserMod));
             Console.WriteLine("Message was decoded as:");
             Console.WriteLine(decodedMessage);
+        }
+
+        private static void Scenario2(int r, int m, double probability)
+        {
+            Console.WriteLine("Enter a message to encode");
+
+        }
+
+        private static void Scenario23(int r, int m, double probability, byte[] data)
+        {
         }
     }
 }

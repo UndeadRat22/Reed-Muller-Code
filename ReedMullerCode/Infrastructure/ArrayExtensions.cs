@@ -26,7 +26,7 @@ namespace Communication.Infrastructure
             byte result = 0;
             for (var i = 0; i < 8; i++)
             {
-                if (values[i]) result |= (byte) (1 << i);
+                if (values[i]) result |= (byte) (1 << (7 - i));
             }
             return result;
         }

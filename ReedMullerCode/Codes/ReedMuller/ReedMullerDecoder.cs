@@ -13,9 +13,18 @@ namespace Communication.Codes.ReedMuller
             _generatorMatrix = new ReedMullerGeneratorMatrix(r, m);
         }
 
-        public byte[] Decode(Message bits)
+        public byte[] Decode(Message message)
         {
-            return null;
+            var decoded = message.Vectors.SelectMany(Decode).Select(c => c == '1').ToArray(); //get the message as a list of {1,0}
+            //drop the appended zeroes;
+            //meaning that if the length is 14, then 6 bits were appended to the original byte string
+            //if the length is a multiple of 8 and > 8, then there's no way to tell how many zeroes were appended to the massage
+            //i.e. if 0xff0xf00 was sent, it's impossible to tell whether that last byte was part of the data set
+            decoded = decoded.Take(message.InitialByteCount * 8).ToArray();
+            //split the bits into groups of 8, (byte size)
+            var byteBitChunks = decoded.Chunk(8);
+            var bytes = byteBitChunks.Select(bits => bits.ToByte()).ToArray();
+            return bytes;
         }
 
         public string Decode(Vector vector)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using Communication.Infrastructure;
 using Communication.Infrastructure.Collections;
 
@@ -36,7 +37,8 @@ namespace Communication.Codes.ReedMuller
 
             return new Message
             {
-                Vectors = encodedVectors
+                Vectors = encodedVectors,
+                InitialByteCount = bytes.Length
             };
         }
 
@@ -66,12 +68,19 @@ namespace Communication.Codes.ReedMuller
 
         public Vector Encode(Vector vector) => _generatorMatrix.Multiply(vector);
 
-        private IEnumerable<Vector> EnumerateBytesAsVectors(IEnumerable<byte> bytes)
+        private IEnumerable<Vector> EnumerateBytesAsVectors(IReadOnlyCollection<byte> bytes)
         {
-            var bitArray = new BitArray(bytes);
-            var bits = bitArray.ToArray();
-            return bits
-                .Chunk(_generatorMatrix.WordSize)
+            //i.e if bytes.length = 1, bits = 1111 1111 and evc = 7, then we need
+            //to encode bits as (1111 111), (1000 000)
+            var totalLengthWithPadding =
+                (int)Math.Ceiling((bytes.Count * 8) / (double) _generatorMatrix.EncodableVectorSize) * _generatorMatrix.EncodableVectorSize;
+
+            //pad remaining bits as 0s
+            var bits = new BitArray(bytes).Values
+                .Pad(false, totalLengthWithPadding);
+
+            return bits.ToArray()
+                .Chunk(_generatorMatrix.EncodableVectorSize)
                 .Select(chunk => new Vector(chunk));
         }
     }
