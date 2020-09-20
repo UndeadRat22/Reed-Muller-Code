@@ -65,7 +65,8 @@ namespace Communication.Codes
         /// </summary>
         public bool DotProduct(Vector other)
         {
-            return Multiply(other).BitArray.Any(b => b);
+            return Multiply(other).BitArray
+                .Aggregate(false, (agg, bit) => agg ^ bit);
             //var productVector = Add(other);
             //return productVector.BitArray.AsEnumerable()
             //    .Aggregate(false, (agg, bit) => agg ^ bit);

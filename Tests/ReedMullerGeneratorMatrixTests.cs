@@ -44,16 +44,22 @@ namespace Tests
             Assert.AreEqual(3, matrix.Rows.Length);
         }
 
-        [Test]
-        public void MultiplyRM24Returns1010111111111010()
+        [TestCase(2, 4, "01101001010", "1010111111111010")]
+        [TestCase(2, 4, "00000000000", "0000000000000000")]
+        [TestCase(2, 4, "11111111111", "1110100010000001")]
+        [TestCase(0, 3, "0", "00000000")]
+        [TestCase(0, 3, "1", "11111111")]
+        [TestCase(3, 3, "00110011", "01101110")]
+        [TestCase(3, 3, "00110010", "11101110")]
+        public void MultiplyReturnsCorrectResult(int r, int m, string raw, string encoded)
         {
             //Arrange
-            var matrix = new ReedMullerGeneratorMatrix(2, 4);
+            var matrix = new ReedMullerGeneratorMatrix(r, m);
             //Act
-            Vector vector = "01101001010";
+            Vector vector = raw;
             var result = matrix.Multiply(vector);
             //Assert
-            Assert.AreEqual("1010111111111010", result.ToString());
+            Assert.AreEqual(encoded, result.ToString());
         }
 
         [Test]
