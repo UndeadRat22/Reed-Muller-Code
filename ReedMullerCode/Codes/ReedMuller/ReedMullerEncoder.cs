@@ -22,7 +22,7 @@ namespace Communication.Codes.ReedMuller
         {
             var rawMessageVectors = EnumerateBytesAsVectors(bytes);
             var encodedVectors = rawMessageVectors
-                .Select(vector => _generatorMatrix.Multiply(vector))
+                .Select(Encode)
                 .ToArray();
 
             return new Message
@@ -30,6 +30,8 @@ namespace Communication.Codes.ReedMuller
                 Vectors = encodedVectors
             };
         }
+
+        public Vector Encode(Vector vector) => _generatorMatrix.Multiply(vector);
 
         private IEnumerable<Vector> EnumerateBytesAsVectors(IEnumerable<byte> bytes)
         {
