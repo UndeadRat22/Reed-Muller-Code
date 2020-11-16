@@ -78,5 +78,7 @@ namespace Codes.Primitives
         public IEnumerator<bool> GetEnumerator() => Bits.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => Bits.GetEnumerator();
         #endregion
+
+        public override string ToString() => string.Join("", this.Select(bit => bit ? "1" : "0"));
     }
 }
