@@ -94,6 +94,7 @@ namespace Codes
             this.textBoxDistorted.Name = "textBoxDistorted";
             this.textBoxDistorted.Size = new System.Drawing.Size(342, 29);
             this.textBoxDistorted.TabIndex = 4;
+            this.textBoxDistorted.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxDistorted_KeyPress);
             // 
             // labelDecoded
             // 
@@ -114,6 +115,7 @@ namespace Codes
             // 
             // buttonEncode
             // 
+            this.buttonEncode.Enabled = false;
             this.buttonEncode.Location = new System.Drawing.Point(548, 43);
             this.buttonEncode.Name = "buttonEncode";
             this.buttonEncode.Size = new System.Drawing.Size(89, 29);

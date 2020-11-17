@@ -10,6 +10,7 @@ namespace Codes
 {
     public partial class SingleVectorMessageForm : Form
     {
+        private readonly GeneratorMatrix _generatorMatrix;
         private readonly Channel _channel;
         private readonly Encoder _encoder;
         private readonly Decoder _decoder;
@@ -17,8 +18,10 @@ namespace Codes
         {
             InitializeComponent();
             _channel = new Channel(0.00);
-            _encoder = new Encoder();
-            _decoder = new Decoder();
+            _generatorMatrix = new GeneratorMatrix(2, 4);
+
+            _encoder = new Encoder(_generatorMatrix);
+            _decoder = new Decoder(_generatorMatrix);
         }
 
         #region Events
@@ -42,25 +45,31 @@ namespace Codes
             UpdateDifferenceText();
         }
 
-        private void buttonClear_Click(object sender, System.EventArgs e)
-        {
-            textBoxInitial.Text = string.Empty;
-            textBoxEncoded.Text = string.Empty;
-            textBoxDistorted.Text = string.Empty;
-            textBoxDecoded.Text = string.Empty;
-
-            textBoxInitial.Enabled = true;
-            textBoxDistorted.Enabled = false;
-
-            buttonEncode.Enabled = true;
-            buttonDistort.Enabled = false;
-            buttonDecode.Enabled = false;
-        }
+        private void buttonClear_Click(object sender, System.EventArgs e) => ResetForm();
 
         private void textBoxInitial_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = e.KeyChar != '1' && e.KeyChar != '0';
+            ProcessKeyPress(e, textBoxInitial, buttonEncode, _generatorMatrix.EncodableVectorSize);
         }
+
+        private void textBoxDistorted_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            ProcessKeyPress(e, textBoxDistorted, buttonDecode, _generatorMatrix.WordSize);
+        }
+
+        private static void ProcessKeyPress(KeyPressEventArgs e, TextBox textBox, Button nextStep, int allowedSize)
+        {
+            bool isCharAllowed = IsCharAllowed(e.KeyChar);
+            e.Handled = !isCharAllowed;
+            if (isCharAllowed)
+            {
+                bool isCorrectSize = allowedSize == (textBox.Text.Length + (IsBackSpace(e.KeyChar) ? -1 : 1));
+                nextStep.Enabled = isCorrectSize;
+            }
+        }
+
+        private static bool IsBackSpace(in char c) => c == '\b';
+        private static bool IsCharAllowed(in char c) => c == '1' || c == '0' || c == '\b';
 
         #endregion
 
@@ -83,6 +92,21 @@ namespace Codes
             };
 
             return operation(message).Vectors.First().ToString();
+        }
+
+        private void ResetForm()
+        {
+            textBoxInitial.Text = string.Empty;
+            textBoxEncoded.Text = string.Empty;
+            textBoxDistorted.Text = string.Empty;
+            textBoxDecoded.Text = string.Empty;
+
+            textBoxInitial.Enabled = true;
+            textBoxDistorted.Enabled = false;
+
+            buttonEncode.Enabled = false;
+            buttonDistort.Enabled = false;
+            buttonDecode.Enabled = false;
         }
     }
 }
