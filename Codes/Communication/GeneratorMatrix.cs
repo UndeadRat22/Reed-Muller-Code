@@ -141,6 +141,15 @@ namespace Codes.Communication
             return result;
         }
 
+        public IOrderedEnumerable<IGrouping<int, MatrixVector>> GetRowsGroupedByComplexity()
+        {
+            return Rows
+                .Skip(1)
+                .Reverse()
+                .GroupBy(row => row.Key.Length)
+                .OrderByDescending(group => group.Key);
+        }
+
         public IOrderedEnumerable<IGrouping<int, MatrixVector>> GetRowsGroupedByComplexity(bool skipIdentity = true)
         {
             var rows = (skipIdentity ? Rows.Skip(1) : Rows).Reverse().ToArray();

@@ -27,7 +27,6 @@ namespace Codes
         #region Events
         private void buttonEncode_Click(object sender, System.EventArgs e)
         {
-            //TODO: ensure size, char types
             textBoxEncoded.Text = Step(textBoxInitial.Text, message => _encoder.Encode(message));
             buttonDistort.Enabled = true;
             textBoxInitial.Enabled = false;
