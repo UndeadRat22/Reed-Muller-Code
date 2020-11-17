@@ -10,6 +10,13 @@ namespace Codes.Primitives
         public int Size => Bits.Count;
 
         /// <summary>
+        /// Returns the indexth bit of the vector;
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool this[int index] => Bits[index];
+
+        /// <summary>
         /// Creates a new vector from a bit string like 10010
         /// </summary>
         /// <param name="bitString"></param>

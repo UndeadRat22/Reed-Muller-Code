@@ -95,7 +95,8 @@ namespace Communication.Codes.ReedMuller
         /// <returns>a vector the size of any given matrix vector</returns>
         public Vector Multiply(Vector vector)
         {
-            return Rows.Select((row, index) => row.Value.Multiply(vector[index]))
+            return Rows
+                .Select((row, index) => row.Value.Multiply(vector[index]))
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
         }
 

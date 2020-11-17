@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Communication.Infrastructure;
-using Communication.Infrastructure.Collections;
 
 namespace Communication.Codes.ReedMuller
 {

@@ -49,7 +49,9 @@
     <Compile Include="Communication\Channel.cs" />
     <Compile Include="Communication\Decoder.cs" />
     <Compile Include="Communication\Encoder.cs" />
+    <Compile Include="Communication\GeneratorMatrix.cs" />
     <Compile Include="Communication\Message.cs" />
+    <Compile Include="Infrastructure\SetValueComparer.cs" />
     <Compile Include="SingleVectorMessageForm.cs">
       <SubType>Form</SubType>
     </Compile>
