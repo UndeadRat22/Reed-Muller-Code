@@ -14,9 +14,11 @@ namespace Codes.Views
         private readonly Channel _channel;
         private readonly Encoder _encoder;
         private readonly Decoder _decoder;
-        public SingleVectorMessageForm()
+        private readonly Form _backForm;
+        public SingleVectorMessageForm(GeneratorMatrix matrix, Form backForm)
         {
             InitializeComponent();
+            _backForm = backForm;
             _channel = new Channel(0.00);
             _generatorMatrix = new GeneratorMatrix(2, 4);
 
@@ -106,6 +108,12 @@ namespace Codes.Views
             buttonEncode.Enabled = false;
             buttonDistort.Enabled = false;
             buttonDecode.Enabled = false;
+        }
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            _backForm.Show();
         }
     }
 }

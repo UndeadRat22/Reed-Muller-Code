@@ -32,6 +32,7 @@ namespace Codes.Views
             this.buttonVector = new System.Windows.Forms.Button();
             this.buttonText = new System.Windows.Forms.Button();
             this.buttonImage = new System.Windows.Forms.Button();
+            this.backButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonVector
@@ -42,6 +43,7 @@ namespace Codes.Views
             this.buttonVector.TabIndex = 0;
             this.buttonVector.Text = "vector";
             this.buttonVector.UseVisualStyleBackColor = true;
+            this.buttonVector.Click += new System.EventHandler(this.buttonVector_Click);
             // 
             // buttonText
             // 
@@ -51,6 +53,7 @@ namespace Codes.Views
             this.buttonText.TabIndex = 1;
             this.buttonText.Text = "text";
             this.buttonText.UseVisualStyleBackColor = true;
+            this.buttonText.Click += new System.EventHandler(this.buttonText_Click);
             // 
             // buttonImage
             // 
@@ -60,12 +63,24 @@ namespace Codes.Views
             this.buttonImage.TabIndex = 2;
             this.buttonImage.Text = "image";
             this.buttonImage.UseVisualStyleBackColor = true;
+            this.buttonImage.Click += new System.EventHandler(this.buttonImage_Click);
+            // 
+            // backButton
+            // 
+            this.backButton.Location = new System.Drawing.Point(204, 186);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(159, 62);
+            this.backButton.TabIndex = 3;
+            this.backButton.Text = "back";
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
             // ScenarioChoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 111);
+            this.ClientSize = new System.Drawing.Size(568, 260);
+            this.Controls.Add(this.backButton);
             this.Controls.Add(this.buttonImage);
             this.Controls.Add(this.buttonText);
             this.Controls.Add(this.buttonVector);
@@ -80,5 +95,6 @@ namespace Codes.Views
         private System.Windows.Forms.Button buttonVector;
         private System.Windows.Forms.Button buttonText;
         private System.Windows.Forms.Button buttonImage;
+        private System.Windows.Forms.Button backButton;
     }
 }

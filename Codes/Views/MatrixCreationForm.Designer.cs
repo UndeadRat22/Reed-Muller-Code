@@ -45,6 +45,7 @@ namespace Codes.Views
             this.buttonStart.TabIndex = 11;
             this.buttonStart.Text = "Generate";
             this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // labelR
             // 

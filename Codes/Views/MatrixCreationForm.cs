@@ -11,6 +11,12 @@ namespace Codes.Views
         }
 
         #region Events
+        private void buttonStart_Click(object sender, System.EventArgs e)
+        {
+            Hide();
+            var scenarioChoice = new ScenarioChoice(this, GetMValue().Value, GetRValue().Value);
+            scenarioChoice.Show();
+        }
         private void textBoxMValue_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsCharAllowed(e.KeyChar);

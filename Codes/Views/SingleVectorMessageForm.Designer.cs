@@ -42,6 +42,7 @@ namespace Codes.Views
             this.buttonDecode = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.labelDifference = new System.Windows.Forms.Label();
+            this.backButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxInitial
@@ -164,11 +165,22 @@ namespace Codes.Views
             this.labelDifference.Size = new System.Drawing.Size(0, 25);
             this.labelDifference.TabIndex = 12;
             // 
+            // backButton
+            // 
+            this.backButton.Location = new System.Drawing.Point(265, 360);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(159, 62);
+            this.backButton.TabIndex = 13;
+            this.backButton.Text = "back";
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
+            // 
             // SingleVectorMessageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 450);
+            this.Controls.Add(this.backButton);
             this.Controls.Add(this.labelDifference);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonDecode);
@@ -204,6 +216,7 @@ namespace Codes.Views
         private System.Windows.Forms.Button buttonDecode;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Label labelDifference;
+        private System.Windows.Forms.Button backButton;
     }
 }
 
