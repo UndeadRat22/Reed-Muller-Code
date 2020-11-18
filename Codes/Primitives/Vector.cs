@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Codes.Infrastructure;
 
 namespace Codes.Primitives
 {
@@ -16,6 +17,10 @@ namespace Codes.Primitives
         /// <returns></returns>
         public bool this[int index] => Bits[index];
 
+        /// <summary>
+        /// Creates a new vector from a byte.
+        /// </summary>
+        public Vector(byte b) : this(b.ToBoolList()) { }
         /// <summary>
         /// Creates a new vector from a bit string like 10010
         /// </summary>

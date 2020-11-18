@@ -23,7 +23,9 @@ namespace Codes.Views
 
         private void buttonText_Click(object sender, System.EventArgs e)
         {
-
+            var textForm = new TextMessageForm(this, _generatorMatrix);
+            textForm.Show();
+            Hide();
         }
 
         private void buttonImage_Click(object sender, System.EventArgs e)

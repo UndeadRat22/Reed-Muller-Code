@@ -52,6 +52,7 @@
     <Compile Include="Communication\GeneratorMatrix.cs" />
     <Compile Include="Communication\Message.cs" />
     <Compile Include="Infrastructure\ArrayValueComparer.cs" />
+    <Compile Include="Infrastructure\ConversionExtensions.cs" />
     <Compile Include="Infrastructure\SetValueComparer.cs" />
     <Compile Include="Views\MatrixCreationForm.cs">
       <SubType>Form</SubType>
@@ -76,6 +77,12 @@
     <Compile Include="Primitives\Vector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\TextMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\TextMessageForm.Designer.cs">
+      <DependentUpon>TextMessageForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Views\MatrixCreationForm.resx">
       <DependentUpon>MatrixCreationForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -94,6 +101,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\TextMessageForm.resx">
+      <DependentUpon>TextMessageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

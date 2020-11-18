@@ -18,9 +18,9 @@ namespace Codes.Views
         public SingleVectorMessageForm(GeneratorMatrix matrix, Form backForm)
         {
             InitializeComponent();
+            _generatorMatrix = matrix;
             _backForm = backForm;
             _channel = new Channel(0.00);
-            _generatorMatrix = new GeneratorMatrix(2, 4);
 
             _encoder = new Encoder(_generatorMatrix);
             _decoder = new Decoder(_generatorMatrix);
