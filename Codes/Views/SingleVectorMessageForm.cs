@@ -111,8 +111,8 @@ namespace Codes.Views
 
         private void backButton_Click(object sender, EventArgs e)
         {
-            this.Hide();
             _backForm.Show();
+            Close();
         }
     }
 }

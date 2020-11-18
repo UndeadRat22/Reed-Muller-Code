@@ -30,12 +30,14 @@ namespace Codes.Views
 
         private void buttonImage_Click(object sender, System.EventArgs e)
         {
-
+            var imageForm = new ImageMessageForm(this, _generatorMatrix);
+            imageForm.Show();
+            Hide();
         }
 
         private void backButton_Click(object sender, System.EventArgs e)
         {
-            Hide();
+            Close();
             _previous.Show();
         }
     }

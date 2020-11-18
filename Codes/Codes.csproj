@@ -46,12 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\MessageTools.cs" />
     <Compile Include="Communication\Channel.cs" />
     <Compile Include="Communication\Decoder.cs" />
     <Compile Include="Communication\Encoder.cs" />
     <Compile Include="Communication\GeneratorMatrix.cs" />
     <Compile Include="Communication\Message.cs" />
     <Compile Include="Infrastructure\ArrayValueComparer.cs" />
+    <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\ConversionExtensions.cs" />
     <Compile Include="Infrastructure\SetValueComparer.cs" />
     <Compile Include="Views\ChannelDistortionForm.cs">
@@ -59,6 +61,12 @@
     </Compile>
     <Compile Include="Views\ChannelDistortionForm.Designer.cs">
       <DependentUpon>ChannelDistortionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ImageMessageForm.Designer.cs">
+      <DependentUpon>ImageMessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\MatrixCreationForm.cs">
       <SubType>Form</SubType>
@@ -91,6 +99,9 @@
     </Compile>
     <EmbeddedResource Include="Views\ChannelDistortionForm.resx">
       <DependentUpon>ChannelDistortionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ImageMessageForm.resx">
+      <DependentUpon>ImageMessageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MatrixCreationForm.resx">
       <DependentUpon>MatrixCreationForm.cs</DependentUpon>

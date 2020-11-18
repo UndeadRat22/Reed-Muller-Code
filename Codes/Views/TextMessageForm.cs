@@ -48,32 +48,15 @@ namespace Codes.Views
         {
             if (!textBoxRaw.Text.Any()) return;
             var bytes = Encoding.ASCII.GetBytes(textBoxRaw.Text);
-            var allBits = bytes.SelectMany(b => b.ToBoolList()).ToList();
-            var originalSize = allBits.Count;
-            var nonFittingBits = originalSize % _generatorMatrix.EncodableVectorSize;
-            if (nonFittingBits > 0)
-            {
-                int totalLength = ((originalSize % _generatorMatrix.EncodableVectorSize) + 1) *
-                                  _generatorMatrix.EncodableVectorSize;
-                allBits = allBits.Pad(totalLength, false).ToList();
-            }
-
-            var vectors = allBits
-                .Batch(_generatorMatrix.EncodableVectorSize)
-                .Select(bits => new Vector(bits))
-                .ToList();
-
-            var message = new Message
-            {
-                Vectors = vectors
-            };
+            var originalSize = bytes.Length * Constants.BitsInByte;
+            var message = MessageTools.BuildMessage(bytes, _generatorMatrix.EncodableVectorSize);
             var encoded = _encoder.Encode(message);
             var passed = _channel.Pass(encoded);
             var decoded = _decoder.Decode(passed);
             var decodedBytes = decoded.Vectors
                 .SelectMany(v => v.Bits)
-                .Take(originalSize)
-                .Batch(8)// batch by byte bit size
+                .Take(originalSize)//only take the original bytes, ignore anything that was added by padding
+                .Batch(Constants.BitsInByte)// batch by byte bit size
                 .Select(bits => bits.ToList().ToByte())
                 .ToArray();
 
@@ -84,7 +67,7 @@ namespace Codes.Views
         private void backButton_Click(object sender, System.EventArgs e)
         {
             _backForm.Show();
-            Hide();
+            Close();
         }
 
         #endregion
