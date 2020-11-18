@@ -7,6 +7,7 @@ using Codes.Communication;
 using Codes.Infrastructure;
 using Decoder = Codes.Communication.Decoder;
 using Encoder = Codes.Communication.Encoder;
+using Message = Codes.Communication.Message;
 
 namespace Codes.Views
 {
@@ -38,15 +39,22 @@ namespace Codes.Views
 
         private void buttonNoEncoding_Click(object sender, EventArgs e)
         {
+            var bytes = File.ReadAllBytes(textBoxRaw.Text);
+            var (header, body) = SplitBmpHeaderFromBody(bytes);
+            var message = MessageTools.BuildMessage(body, Constants.BitsInByte);
+            var passed = _channel.Pass(message);
+            var passedBodyBytes = passed.Vectors
+                .Select(v => v.Bits.ToByte());
 
+            var fileBytes= header.Concat(passedBodyBytes).ToArray();
+            File.WriteAllBytes(textBoxNoEnc.Text, fileBytes);
         }
 
         private void buttonWithEncoding_Click(object sender, EventArgs e)
         {
             var bytes = File.ReadAllBytes(textBoxRaw.Text);
-            // split header and body;
-            var header = bytes.Take(Constants.BMP.HeaderSizeInBytes).ToList();
-            var body = bytes.Skip(Constants.BMP.HeaderSizeInBytes).ToArray();
+            var (header, body) = SplitBmpHeaderFromBody(bytes);
+
             var originalSize = body.Length * Constants.BitsInByte;
             var message = MessageTools.BuildMessage(body, _generatorMatrix.EncodableVectorSize);
             var encoded = _encoder.Encode(message);
@@ -64,6 +72,18 @@ namespace Codes.Views
                 .ToArray();
 
             File.WriteAllBytes(textBoxWithEnc.Text, fileBytes);
+        }
+
+        /// <summary>
+        /// Splits the header from the body (54 bytes)
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        private (byte[] header, byte[] body) SplitBmpHeaderFromBody(byte[] bytes)
+        {
+            var header = bytes.Take(Constants.BMP.HeaderSizeInBytes).ToArray();
+            var body = bytes.Skip(Constants.BMP.HeaderSizeInBytes).ToArray();
+            return (header, body);
         }
 
         private void backButton_Click(object sender, EventArgs e)
