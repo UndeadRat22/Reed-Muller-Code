@@ -11,7 +11,7 @@ namespace Codes.Views
     public partial class SingleVectorMessageForm : Form
     {
         private readonly GeneratorMatrix _generatorMatrix;
-        private readonly Channel _channel;
+        private readonly Channel _channel = Program.Channel;
         private readonly Encoder _encoder;
         private readonly Decoder _decoder;
         private readonly Form _backForm;
@@ -20,7 +20,6 @@ namespace Codes.Views
             InitializeComponent();
             _generatorMatrix = matrix;
             _backForm = backForm;
-            _channel = new Channel(0.00);
 
             _encoder = new Encoder(_generatorMatrix);
             _decoder = new Decoder(_generatorMatrix);

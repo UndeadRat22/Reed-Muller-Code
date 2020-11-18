@@ -12,13 +12,21 @@ namespace Codes.Communication
             get => _distortionProbability;
             set => _distortionProbability = value.Clamp(0d, 1d);
         }
+
+        public int Seed
+        {
+            get => _seed;
+            set { _seed = value; _random = new Random(value); }
+        }
+
+        private int _seed;
         private double _distortionProbability;
-        private readonly Random _random;
+        private Random _random;
 
         public Channel(double distortionProbability, int seed = 666)
         {
             DistortionProbability = distortionProbability;
-            _random = new Random(seed);
+            Seed = seed;
         }
 
         /// <summary>

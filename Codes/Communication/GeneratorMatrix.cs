@@ -97,7 +97,7 @@ namespace Codes.Communication
         public Vector Multiply(Vector vector)
         {
             return Rows
-                .Select((row, index) => row.Value.Multiply(vector[index]))
+                .Select((row, index) => row.Value.Multiply(vector[index % vector.Size]))
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
         }
 

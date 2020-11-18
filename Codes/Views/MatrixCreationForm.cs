@@ -16,6 +16,9 @@ namespace Codes.Views
             Hide();
             var scenarioChoice = new ScenarioChoice(this, GetMValue().Value, GetRValue().Value);
             scenarioChoice.Show();
+
+            var distortionForm = new ChannelDistortionForm();
+            distortionForm.Show();
         }
         private void textBoxMValue_KeyPress(object sender, KeyPressEventArgs e)
         {

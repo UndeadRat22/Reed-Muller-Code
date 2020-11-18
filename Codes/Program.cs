@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Codes.Communication;
 using Codes.Views;
 
 namespace Codes
@@ -16,6 +17,7 @@ namespace Codes
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MatrixCreationForm());
         }
+        public static Channel Channel { get; } = new Channel(0);
     }
 
     public static class Settings

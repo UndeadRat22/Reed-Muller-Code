@@ -48,6 +48,7 @@ namespace Codes.Views
             this.backButton.TabIndex = 4;
             this.backButton.Text = "back";
             this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
             // textBoxRaw
             // 

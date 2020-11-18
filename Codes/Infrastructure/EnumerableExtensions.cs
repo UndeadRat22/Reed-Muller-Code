@@ -6,6 +6,13 @@ namespace Codes.Infrastructure
 {
     public static class EnumerableExtensions
     {
+        /// <summary>
+        /// Performs an action with every element.
+        /// Semantic sugar for foreach
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="action"></param>
         public static void Each<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             foreach (var elem in enumerable)
@@ -13,7 +20,6 @@ namespace Codes.Infrastructure
                 action(elem);
             }
         }
-
 
         /// <summary>
         /// Returns all possible combinations of a given size
@@ -54,6 +60,52 @@ namespace Codes.Infrastructure
                     yield return combination;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns all items from a given enumerable, then returns padding until size is reached
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="totalSize"></param>
+        /// <param name="padding"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Pad<T>(this IEnumerable<T> items, int totalSize, T padding)
+        {
+            int count = 0;
+            foreach (var item in items)
+            {
+                count++;
+                yield return item;
+            }
+            for (; count < totalSize; count++)
+            {
+                yield return padding;
+            }
+        }
+
+
+        /// <summary>
+        /// splits the enumeration into multiple enumerations of size batchSize
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">the enumeration to split</param>
+        /// <param name="batchSize">size to split into</param>
+        /// <returns></returns>
+        public static IEnumerable<IEnumerable<T>> Batch<T>(
+            this IEnumerable<T> source, int batchSize)
+        {
+            using (var enumerator = source.GetEnumerator())
+                while (enumerator.MoveNext())
+                    yield return YieldBatchElements(enumerator, batchSize - 1);
+        }
+
+        private static IEnumerable<T> YieldBatchElements<T>(
+            IEnumerator<T> source, int batchSize)
+        {
+            yield return source.Current;
+            for (int i = 0; i < batchSize && source.MoveNext(); i++)
+                yield return source.Current;
         }
     }
 }

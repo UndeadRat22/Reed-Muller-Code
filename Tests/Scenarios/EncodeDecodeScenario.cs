@@ -22,6 +22,7 @@ namespace Tests.Scenarios
         [TestCase(2, 5, "1111111111111111")]
         [TestCase(3, 4, "101010101010101")]
         [TestCase(3, 4, "101010101010001")]
+        [TestCase(3, 3, "10101010")]
         public void Test(int r, int m, string raw)
         {
             //Arrange

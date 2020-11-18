@@ -54,6 +54,12 @@
     <Compile Include="Infrastructure\ArrayValueComparer.cs" />
     <Compile Include="Infrastructure\ConversionExtensions.cs" />
     <Compile Include="Infrastructure\SetValueComparer.cs" />
+    <Compile Include="Views\ChannelDistortionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ChannelDistortionForm.Designer.cs">
+      <DependentUpon>ChannelDistortionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\MatrixCreationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +89,9 @@
     <Compile Include="Views\TextMessageForm.Designer.cs">
       <DependentUpon>TextMessageForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\ChannelDistortionForm.resx">
+      <DependentUpon>ChannelDistortionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\MatrixCreationForm.resx">
       <DependentUpon>MatrixCreationForm.cs</DependentUpon>
     </EmbeddedResource>
