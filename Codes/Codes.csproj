@@ -53,10 +53,22 @@
     <Compile Include="Communication\Message.cs" />
     <Compile Include="Infrastructure\ArrayValueComparer.cs" />
     <Compile Include="Infrastructure\SetValueComparer.cs" />
-    <Compile Include="SingleVectorMessageForm.cs">
+    <Compile Include="Views\MatrixCreationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SingleVectorMessageForm.Designer.cs">
+    <Compile Include="Views\MatrixCreationForm.Designer.cs">
+      <DependentUpon>MatrixCreationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScenarioChoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ScenarioChoice.Designer.cs">
+      <DependentUpon>ScenarioChoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SingleVectorMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SingleVectorMessageForm.Designer.cs">
       <DependentUpon>SingleVectorMessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\EnumerableExtensions.cs" />
@@ -64,7 +76,13 @@
     <Compile Include="Primitives\Vector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="SingleVectorMessageForm.resx">
+    <EmbeddedResource Include="Views\MatrixCreationForm.resx">
+      <DependentUpon>MatrixCreationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ScenarioChoice.resx">
+      <DependentUpon>ScenarioChoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SingleVectorMessageForm.resx">
       <DependentUpon>SingleVectorMessageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

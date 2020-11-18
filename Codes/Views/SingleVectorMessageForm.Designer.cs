@@ -1,5 +1,5 @@
 ﻿
-namespace Codes
+namespace Codes.Views
 {
     partial class SingleVectorMessageForm
     {

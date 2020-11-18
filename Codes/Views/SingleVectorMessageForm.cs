@@ -6,7 +6,7 @@ using Codes.Communication;
 using Codes.Primitives;
 using Message = Codes.Communication.Message;
 
-namespace Codes
+namespace Codes.Views
 {
     public partial class SingleVectorMessageForm : Form
     {
