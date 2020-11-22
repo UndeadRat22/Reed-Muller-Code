@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Codes.Infrastructure;
 using Codes.Primitives;
 
@@ -11,185 +11,217 @@ namespace Codes.Communication
         public int R { get; }
         public int M { get; }
         public int VectorSize => 1 << M;
-        public int EncodableVectorSize => Rows.Length;
-        public int WordSize => Rows.First().Value.Size; //this is supposed to be equal to VectorSize ????
-        public MatrixVector[] Rows { get; private set; }
+        public int EncodableVectorSize => Rows.Count;
+        public IList<IndexedVector> Rows { get; private set; }
 
-        //Characteristic vector lookup map
-        private readonly Dictionary<int[], Vector[]> _characteristicVectors =
-            new Dictionary<int[], Vector[]>(new ArrayValueComparer<int>());
+        /// <summary>
+        /// Lookup map for characteristic vectors
+        /// </summary>
+        private readonly IDictionary<HashSet<int>, IList<Vector>> _characteristicVectors = 
+            new Dictionary<HashSet<int>, IList<Vector>>(new SetValueComparer<int>());
+
+        private IList<List<IndexedVector>> _orderedByComplexity;
+        public IList<List<IndexedVector>> GetRowsGroupedByComplexity()
+        {
+            return _orderedByComplexity = _orderedByComplexity ??
+                Rows.Skip(1)
+                  .Reverse()
+                  .GroupBy(row => row.Index.Count)
+                  .OrderByDescending(group => group.Key)
+                  .Select(group => group.ToList())
+                  .ToList();
+        }
 
         public GeneratorMatrix(int r, int m)
         {
-            M = m;
             R = r;
-            Generate();
+            M = m;
+            Generate(); 
         }
 
-        public MatrixVector this[params int[] index]
-            => Rows.First(row => row.HasKey(index));
+        private readonly SetValueComparer<int> setValueComparer = new SetValueComparer<int>();
+        public IndexedVector this[HashSet<int> index] => Rows
+            .FirstOrDefault(row => setValueComparer.Equals(row.Index, index));
 
         /// <summary>
-        /// Generates the GRM matrix vectors
+        /// Multiplies the given vector with the generator matrix.
+        /// Does not ensure size constraints.
         /// </summary>
-        private void Generate()
-        {
-            var baseVectors = GenerateBaseVectors().ToArray();
-
-            //base vectors are x1 (1111 1111), x2 (1111 0000), x3 (1100, 1100), x4 (1010 1010) for m = 3
-            //the next step is to generate the full generator matrix using (r) products with the base vectors
-            //i.e. if r = 2, then it should be base vectors + (x1*x2, x1*x3, x1*x4), (x2*x3, x2*x4), (x3 * x4), and r = 3 would
-            //include x1*x2*x3, etc.
-            if (R > 1)
-            {
-                //getting the combinations of all vectors in R means (R being the max selection size). Note - combinations, not permutations, as V1 * V2 == V2 * V1
-                //skipping the 'One' Vector as it simply provides the same vector after multiplication (V * V1 = V)
-                var vectorCombinations = baseVectors.Skip(1).GetCombinations(2, R);
-
-                //with every set(combination of vectors) perform an aggregation action: multiply the vectors together
-                //also keep track of the indices used for the creation of vectors;
-                var productVectors = vectorCombinations
-                    .Select(combination => combination
-                        .Aggregate(new MatrixVector(new int[] { }, Vector.One(VectorSize)),
-                            (acc, v) =>
-                                new MatrixVector(acc.Key.Concat(v.Key).ToArray(), acc.Value.Multiply(v.Value))));
-
-                Rows = baseVectors.Concat(productVectors).ToArray();
-            }
-            else
-            {
-                Rows = baseVectors;
-            }
-        }
-
-        /// <summary>
-        /// Generates the base vectors to generate the matrix with;
-        /// </summary>
-        /// <returns>indexed base vectors</returns>
-        private IEnumerable<MatrixVector> GenerateBaseVectors()
-        {
-            var vectors = new MatrixVector(new[] {0}, Vector.One(VectorSize));
-            yield return vectors;
-            if (R == 0)
-            {
-                yield break;
-            }
-
-            var index = 0;
-            for (var currentSize = VectorSize >> 1; currentSize >= 1; currentSize >>= 1)
-            {
-                var onePart = Enumerable.Repeat(true, currentSize);
-                var zeroPart = Enumerable.Repeat(false, currentSize);
-                var elem = onePart.Concat(zeroPart).ToArray();
-                var vectorBits = Enumerable.Repeat(elem, VectorSize / (currentSize << 1))
-                    .SelectMany(x => x);
-
-                var vector = new MatrixVector(new[] {++index}, new Vector(vectorBits));
-                yield return vector;
-            }
-        }
-
-        /// <summary>
-        /// Multiplies the matrix by a vector the size of matrix height
-        /// </summary>
-        /// <param name="vector">vector to multiply the matrix with</param>
-        /// <returns>a vector the size of any given matrix vector</returns>
+        /// <param name="vector">Vector to multiply with</param>
+        /// <returns>Multiplication result</returns>
         public Vector Multiply(Vector vector)
         {
             return Rows
-                .Select((row, index) => row.Value.Multiply(vector[index % vector.Size]))
+                //Multiply the index'th bit of the vector with the index'th row of the matrix.
+                .Select((row, index) => row.Value.Multiply(vector[index]))
+                //Add all of the vectors together, using 0 as seed, as 0 + v == v;
                 .Aggregate(Vector.Zero(VectorSize), (agg, v) => agg.Add(v));
+
+        }
+
+        public IList<Vector> GetCharacteristicVectorsFor(IndexedVector vector)
+        {
+            var contains = _characteristicVectors.TryGetValue(vector.Index, out var result);
+            if (contains) return result;
+            var indices = vector.GetCharacteristicVectorIndices(M);
+            var indicesWithInverse = indices
+                //get index and the 'inverse' of the index
+                .SelectMany(index => new[] {-index, index})
+                .ToList();
+
+            var combinations = indicesWithInverse
+                //get all combinations of the indices in indices.Count means.
+                .GetCombinations(indices.Count)
+                //convert to hashset
+                .Select(index => index.ToHashSet())
+                //skip indexes like {...,x, ..., -x, ...}
+                .Where(index => index.All(part => !index.Contains(-part)))
+                .ToList();
+
+            var characteristics = new List<Vector>(combinations.Count);
+            foreach (var combination in combinations)
+            {
+                var characteristicVector = Vector.One(VectorSize);
+                foreach (var index in combination)
+                {
+                    //Get either the inverse of the vector (complement), or the vector itself
+                    bool isInverse = index < 0;
+                    var row = this[new HashSet<int>{ Math.Abs(index) }].Value;
+                    var toMultiply = isInverse ? row.Complement() : row;
+
+                    characteristicVector = characteristicVector.Multiply(toMultiply);
+                }
+                characteristics.Add(characteristicVector);
+            }
+
+            _characteristicVectors.Add(vector.Index, characteristics);
+
+            return characteristics;
         }
 
         /// <summary>
-        /// Finds the characteristic vectors in the dictionary, or if doesn't exist
-        /// calculates them and adds it to the dictionary.
+        /// Generates the matrix rows using R and M parameters.
+        /// Stores the result in _rows;
         /// </summary>
-        /// <param name="key">the key of the vector</param>
-        /// <returns>characteristic vectors for any given vector key</returns>
-        public Vector[] GetCharacteristicVectorsFor(int[] key)
+        private void Generate()
         {
-            var contains = _characteristicVectors.TryGetValue(key, out var result);
-            if (contains) return result;
-            var matrixVector = this[key];
-            var indices = matrixVector.GetCharacteristicVectorIndices(M);
-            //need vector complements too.
-            var characteristicVectorKeyCombinations = indices
-                .SelectMany(index => new[] {index, -index})
-                .GetCombinations(indices.Length)
-                .Select(c => c.ToArray())
-                .Where(c => c.All(e => !c.Contains(-e)))
-                .ToArray(); //filter out keys like x1!(x1);
-
-            var vectors = new List<Vector>();
-            foreach (var comb in characteristicVectorKeyCombinations)
+            var baseVectors = GetBaseVectors().ToList();
+            // if R <= 1, then there is no need to generate the products from vector combinations
+            if (R <= 1)
             {
-                var vectorToAdd = Vector.One(VectorSize);
-                foreach (var index in comb)
-                {
-                    var isInverse = index < 0;
-                    var vector = this[isInverse ? -index : index].Value;
-                    vector = isInverse ? vector.Complement() : vector;
-                    vectorToAdd = vectorToAdd.Multiply(vector);
-                }
-
-                vectors.Add(vectorToAdd);
+                Rows = baseVectors;
+                return;
             }
+            //get all possible combinations from the base vectors in collections of size 2 - R.
+            //skip the first 'base' vector, as it's equivalent to 1, and when multiplying by it later, the resulting vector is simply itself.
+            var combinations = baseVectors.Skip(1).GetCombinations(2, R);
 
-            _characteristicVectors.Add(key, result = vectors.ToArray());
+            var indexedCombinedVectors = combinations
+                .Select(combination => IndexedVector.Combine(combination, VectorSize));
 
+            Rows = baseVectors
+                .Concat(indexedCombinedVectors)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Builds vectors which are used to generate the rest of the vectors,
+        /// for example: 11111111, 11110000, 11001100, 10101010 for M = 3;
+        /// </summary>
+        /// <returns> indexed vectors </returns>
+        private IEnumerable<IndexedVector> GetBaseVectors()
+        {
+            var index = 0; //indexed used to index vectors;
+            //Starting from 2**M, go down in powers of two
+            //So i = 2**M, 2**(M-1), 2**(M-2) ... 2**(0)
+            for (var i = 1 << M; i >= 1; i = i >> 1, index++)
+            {
+                //One part
+                var ones = Enumerable.Repeat(true, i).ToList();
+                //Zero part
+                var zeroes = Enumerable.Repeat(false, i).ToList();
+                var vectorBits = new List<bool>(VectorSize);
+                while (vectorBits.Count != VectorSize)
+                {
+                    vectorBits.AddRange(ones);
+                    if (vectorBits.Count != VectorSize)
+                    {
+                        vectorBits.AddRange(zeroes);
+                    }
+                }
+                yield return new IndexedVector
+                {
+                    Index = new HashSet<int> { index },
+                    Value = new Vector(vectorBits)
+                };
+            }
+        }
+    }
+
+    public class IndexedVector
+    {
+        public HashSet<int> Index { get; set; }
+        public Vector Value { get; set; }
+
+        /// <summary>
+        /// Returns the list of indices not used in the construction of this vector.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public IList<int> GetCharacteristicVectorIndices(int m)
+        {
+            return Enumerable.Range(1, m)
+                .Except(Index)
+                .ToList();
+        }
+        
+        /// <summary>
+        /// Combines vectors into their product vector.
+        /// for example: [ v1, v2 ] => v3: {Value:v1 * v2, Index:[v1.Index, v2.Index]
+        /// </summary>
+        /// <param name="vectors">vectors to combine</param>
+        /// <param name="vectorSize">the size of the passed vectors</param>
+        /// <returns>combined vector</returns>
+        public static IndexedVector Combine(IEnumerable<IndexedVector> vectors, int vectorSize)
+        {
+            var result = new IndexedVector
+            {
+                Index = Enumerable.Empty<int>().ToHashSet(),
+                Value = Vector.One(vectorSize)
+            };
+            foreach (var vector in vectors)
+            {
+                result.Value = result.Value.Multiply(vector.Value);
+                result.Index.UnionWith(vector.Index);
+            }
             return result;
         }
 
-        public IOrderedEnumerable<IGrouping<int, MatrixVector>> GetRowsGroupedByComplexity()
+        #region object
+        public override int GetHashCode()
         {
-            return Rows
-                .Skip(1)
-                .Reverse()
-                .GroupBy(row => row.Key.Length)
-                .OrderByDescending(group => group.Key);
+            int result = 17;
+            foreach (var t in Index)
+            {
+                unchecked
+                {
+                    result = result ^ 397 + t.GetHashCode();
+                }
+            }
+            return result;
         }
 
-        public IOrderedEnumerable<IGrouping<int, MatrixVector>> GetRowsGroupedByComplexity(bool skipIdentity = true)
+        public override bool Equals(object obj)
         {
-            var rows = (skipIdentity ? Rows.Skip(1) : Rows).Reverse().ToArray();
-            return rows.GroupBy(row => row.Key.Length).OrderByDescending(grouping => grouping.Key);
+            if (!(obj is IndexedVector other)) return false;
+            return other.Index.Count == Index.Count && other.Index.All(Index.Contains);
         }
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            foreach (var row in Rows)
-            {
-                var key = string.Join(",", row.Key.Select(p => p.ToString()));
-                sb.AppendLine($"x[{key}]:{row.Value}");
-            }
-
-            return sb.ToString();
+            return string.Join(",", Index.Select(i => i.ToString())) + ": " + Value;
         }
 
-        public class MatrixVector
-        {
-            public int[] Key { get; set; }
-            public Vector Value { get; set; }
-
-            public MatrixVector(int[] key, Vector value)
-            {
-                Key = key;
-                Value = value;
-            }
-
-            public bool HasKey(params int[] key)
-            {
-                return key.Length == Key.Length && Key.All(key.Contains);
-            }
-
-            public int[] GetCharacteristicVectorIndices(int m)
-            {
-                return Enumerable.Range(1, m)
-                    .Except(Key)
-                    .ToArray();
-            }
-        }
+        #endregion
     }
 }

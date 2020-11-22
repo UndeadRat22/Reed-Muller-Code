@@ -21,6 +21,7 @@ namespace Codes.Communication
             };
         }
 
+
         private Vector Decode(Vector vector)
         {
             //the inverse bitList of the vector;
@@ -31,11 +32,15 @@ namespace Codes.Communication
             foreach (var rGroup in rows)
             {
                 //this result will have to be added to the given vector, when proceeding to a 'lower' complexity
-                var groupResult = Vector.Zero(_generatorMatrix.WordSize);
+                var groupResult = Vector.Zero(_generatorMatrix.EncodableVectorSize);
                 foreach (var row in rGroup)
                 {
                     //get characteristic vectors for row.
-                    var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row.Key);
+                    var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row);
+                    if (!vectors.Any())
+                    {
+                        vectors = new List<Vector> { Vector.One(_generatorMatrix.VectorSize) };
+                    }
                     //get majority of 'votes' for row.
                     var votes = vectors.Select(v => v.DotProduct(vector)).ToList();
                     var majority = GetMajority(votes);

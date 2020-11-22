@@ -54,7 +54,7 @@ namespace Codes.Views
 
         private void textBoxDistorted_KeyPress(object sender, KeyPressEventArgs e)
         {
-            ProcessKeyPress(e, textBoxDistorted, buttonDecode, _generatorMatrix.WordSize);
+            ProcessKeyPress(e, textBoxDistorted, buttonDecode, _generatorMatrix.VectorSize);
         }
 
         private static void ProcessKeyPress(KeyPressEventArgs e, TextBox textBox, Button nextStep, int allowedSize)
