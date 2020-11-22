@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Alternative\GeneratorMatrix.cs" />
     <Compile Include="Communication\MessageTools.cs" />
     <Compile Include="Communication\Channel.cs" />
     <Compile Include="Communication\Decoder.cs" />

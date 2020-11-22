@@ -40,7 +40,7 @@ namespace Codes.Communication
             //the next step is to generate the full generator matrix using (r) products with the base vectors
             //i.e. if r = 2, then it should be base vectors + (x1*x2, x1*x3, x1*x4), (x2*x3, x2*x4), (x3 * x4), and r = 3 would
             //include x1*x2*x3, etc.
-            if (R > 1 && R != M)
+            if (R > 1)
             {
                 //getting the combinations of all vectors in R means (R being the max selection size). Note - combinations, not permutations, as V1 * V2 == V2 * V1
                 //skipping the 'One' Vector as it simply provides the same vector after multiplication (V * V1 = V)
