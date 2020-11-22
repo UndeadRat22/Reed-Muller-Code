@@ -53,9 +53,12 @@ namespace Codes.Views
             var encoded = _encoder.Encode(message);
             var passed = _channel.Pass(encoded);
             var decoded = _decoder.Decode(passed);
-            var decodedBytes = decoded.Vectors
+            var bitsOfOriginalSize = decoded.Vectors
                 .SelectMany(v => v.Bits)
-                .Take(originalSize)//only take the original bytes, ignore anything that was added by padding
+                .Take(originalSize)
+                .ToList();//only take the original bytes, ignore anything that was added by padding)
+            
+            var decodedBytes = bitsOfOriginalSize
                 .Batch(Constants.BitsInByte)// batch by byte bit size
                 .Select(bits => bits.ToList().ToByte())
                 .ToArray();

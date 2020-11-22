@@ -32,14 +32,14 @@ namespace Codes.Communication
             foreach (var rGroup in rows)
             {
                 //this result will have to be added to the given vector, when proceeding to a 'lower' complexity
-                var groupResult = Vector.Zero(_generatorMatrix.EncodableVectorSize);
+                var groupResult = Vector.Zero(_generatorMatrix.VectorSize);
                 foreach (var row in rGroup)
                 {
                     //get characteristic vectors for row.
                     var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row);
                     if (!vectors.Any())
                     {
-                        vectors = new List<Vector> { Vector.One(_generatorMatrix.VectorSize) };
+                        vectors = new[] { Vector.One(_generatorMatrix.VectorSize) };
                     }
                     //get majority of 'votes' for row.
                     var votes = vectors.Select(v => v.DotProduct(vector)).ToList();
@@ -52,7 +52,7 @@ namespace Codes.Communication
                 //s + u;
                 vector = vector.Add(groupResult);
             }
-            var majorityCount = GetMajority(vector.Bits);
+            var majorityCount = GetMajority(vector.ToList());
             bitList.Add(majorityCount);
             bitList.Reverse();
             return new Vector(bitList);

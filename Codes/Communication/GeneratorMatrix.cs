@@ -205,7 +205,7 @@ namespace Codes.Communication
             {
                 unchecked
                 {
-                    result = result ^ 397 + t.GetHashCode();
+                    result = result * 397 + t.GetHashCode();
                 }
             }
             return result;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Communication.Infrastructure;
 
 namespace Communication.Codes.ReedMuller
@@ -41,6 +42,10 @@ namespace Communication.Codes.ReedMuller
                 {
                     //get characteristic vectors for row.
                     var vectors = _generatorMatrix.GetCharacteristicVectorsFor(row.Key);
+                    if (!vectors.Any())
+                    {
+                        vectors = new Vector[] { Vector.One(_generatorMatrix.VectorSize), };
+                    }
                     //get majority of 'votes' for row.
                     var votes = vectors.Select(v => v.DotProduct(vector)).ToArray();
                     var majority = GetMajority(votes);

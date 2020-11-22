@@ -21,8 +21,7 @@ namespace Codes.Communication
             //need to "pad" the bit list with extra bits so they fit exactly.
             if (nonFittingBits > 0) 
             {
-                int totalLength = ((sizeInBits % vectorSize) + 1) * vectorSize;
-                allBits = allBits.Pad(totalLength, false).ToList();
+                allBits = allBits.Pad(vectorSize - nonFittingBits, false).ToList();
             }
 
             var vectors = allBits

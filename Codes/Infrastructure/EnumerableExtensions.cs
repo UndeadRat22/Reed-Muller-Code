@@ -67,18 +67,16 @@ namespace Codes.Infrastructure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
-        /// <param name="totalSize"></param>
+        /// <param name="paddingSize"></param>
         /// <param name="padding"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Pad<T>(this IEnumerable<T> items, int totalSize, T padding)
+        public static IEnumerable<T> Pad<T>(this IEnumerable<T> items, int paddingSize, T padding)
         {
-            int count = 0;
             foreach (var item in items)
             {
-                count++;
                 yield return item;
             }
-            for (; count < totalSize; count++)
+            for (int count = 0; count < paddingSize; count++)
             {
                 yield return padding;
             }
