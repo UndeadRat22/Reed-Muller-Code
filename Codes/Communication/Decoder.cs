@@ -13,6 +13,12 @@ namespace Codes.Communication
             _generatorMatrix = generatorMatrix;
         }
 
+        /// <summary>
+        /// Decodes the give messages' vectors.
+        /// Does not modify the original message
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>new message containing decoded vectors</returns>
         public Message Decode(Message message)
         {
             return new Message
@@ -21,7 +27,11 @@ namespace Codes.Communication
             };
         }
 
-
+        /// <summary>
+        /// Decodes a given vector using the 'logical majority' algorithm.
+        /// </summary>
+        /// <param name="vector">the vector to decode</param>
+        /// <returns>decoded vector</returns>
         private Vector Decode(Vector vector)
         {
             //the inverse bitList of the vector;

@@ -23,6 +23,8 @@ namespace Codes.Views
 
             _encoder = new Encoder(_generatorMatrix);
             _decoder = new Decoder(_generatorMatrix);
+
+            labelRequiredSize.Text = $"Required size: {_generatorMatrix.EncodableVectorSize}";
         }
 
         #region Events
@@ -42,7 +44,7 @@ namespace Codes.Views
         private void buttonDecode_Click(object sender, EventArgs e)
         {
             textBoxDecoded.Text = Step(textBoxDistorted.Text, message => _decoder.Decode(message));
-            UpdateDifferenceText();
+            UpdateFinalDifferenceText();
         }
 
         private void buttonClear_Click(object sender, System.EventArgs e) => ResetForm();
@@ -55,6 +57,11 @@ namespace Codes.Views
         private void textBoxDistorted_KeyPress(object sender, KeyPressEventArgs e)
         {
             ProcessKeyPress(e, textBoxDistorted, buttonDecode, _generatorMatrix.VectorSize);
+        }
+
+        private void textBoxDistorted_TextChanged(object sender, EventArgs e)
+        {
+            UpdateDistortedDifferenceText();
         }
 
         private static void ProcessKeyPress(KeyPressEventArgs e, TextBox textBox, Button nextStep, int allowedSize)
@@ -73,7 +80,7 @@ namespace Codes.Views
 
         #endregion
 
-        private void UpdateDifferenceText()
+        private void UpdateFinalDifferenceText()
         {
             var startingString = textBoxInitial.Text;
             var finalString = textBoxDecoded.Text;
@@ -82,6 +89,22 @@ namespace Codes.Views
                 .Count(areEqual => !areEqual);
 
             labelDifference.Text = $"Initial bits differ from final bits in {difference} places.";
+        }
+
+        private void UpdateDistortedDifferenceText()
+        {
+            var startString = textBoxEncoded.Text;
+            var finalString = textBoxDistorted.Text;
+
+            var difference = startString
+                .Zip(finalString, (a, b) => a == b)
+                .Select((areEqual, index) => (areEqual, index))
+                .Where(p => !p.areEqual)
+                .Select(p => p.index)
+                .ToList();
+
+            labelEncDistDifference.Text = $"Encoded bits differ from distorted bits in {difference.Count} places.";
+            labelDifferenceIndices.Text = "Indices of different bits: " + string.Join(", ", difference);
         }
 
         private string Step(string text, Func<Message, Message> operation)

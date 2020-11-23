@@ -21,6 +21,11 @@ namespace Codes.Communication
             new Dictionary<HashSet<int>, IList<Vector>>(new SetValueComparer<int>());
 
         private IList<List<IndexedVector>> _orderedByComplexity;
+        /// <summary>
+        /// Groups matrix rows by complexity (complexity - count of the vectors used to generate the vector)
+        /// Only calculates it once, stores the result in _orderedByComplexity for subsequent calls.
+        /// </summary>
+        /// <returns>descending ordered list of complexity groups</returns>
         public IList<List<IndexedVector>> GetRowsGroupedByComplexity()
         {
             return _orderedByComplexity = _orderedByComplexity ??
@@ -40,6 +45,12 @@ namespace Codes.Communication
         }
 
         private readonly SetValueComparer<int> setValueComparer = new SetValueComparer<int>();
+
+        /// <summary>
+        /// Gets a row by it's index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>matrix row</returns>
         public IndexedVector this[HashSet<int> index] => Rows
             .FirstOrDefault(row => setValueComparer.Equals(row.Index, index));
 
@@ -59,6 +70,12 @@ namespace Codes.Communication
 
         }
 
+
+        /// <summary>
+        /// Gets the 'characteristic' vectors for a given matrix row(IndexedVector).
+        /// </summary>
+        /// <param name="vector">row to get the vectors for</param>
+        /// <returns>characteristic vectors</returns>
         public IList<Vector> GetCharacteristicVectorsFor(IndexedVector vector)
         {
             var contains = _characteristicVectors.TryGetValue(vector.Index, out var result);

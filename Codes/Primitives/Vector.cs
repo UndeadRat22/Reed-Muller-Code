@@ -82,7 +82,17 @@ namespace Codes.Primitives
             .Aggregate(false, (agg, bit) => agg ^ bit);
 
         #region static
+        /// <summary>
+        /// Builds a vector of length 'size' made out of 'false' or '0';
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns>built vector</returns>
         public static Vector Zero(int size) => new Vector(Enumerable.Repeat(false, size));
+        /// <summary>
+        /// Builds a vector of length 'size' made out of 'true' or '1';
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns>built vector</returns>
         public static Vector One(int size) => new Vector(Enumerable.Repeat(true, size));
         #endregion
 

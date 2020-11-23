@@ -43,13 +43,16 @@ namespace Codes.Views
             this.buttonClear = new System.Windows.Forms.Button();
             this.labelDifference = new System.Windows.Forms.Label();
             this.backButton = new System.Windows.Forms.Button();
+            this.labelEncDistDifference = new System.Windows.Forms.Label();
+            this.labelRequiredSize = new System.Windows.Forms.Label();
+            this.labelDifferenceIndices = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxInitial
             // 
             this.textBoxInitial.Location = new System.Drawing.Point(198, 43);
             this.textBoxInitial.Name = "textBoxInitial";
-            this.textBoxInitial.Size = new System.Drawing.Size(343, 29);
+            this.textBoxInitial.Size = new System.Drawing.Size(492, 29);
             this.textBoxInitial.TabIndex = 0;
             this.textBoxInitial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxInitial_KeyPress);
             // 
@@ -76,7 +79,7 @@ namespace Codes.Views
             this.textBoxEncoded.Enabled = false;
             this.textBoxEncoded.Location = new System.Drawing.Point(198, 102);
             this.textBoxEncoded.Name = "textBoxEncoded";
-            this.textBoxEncoded.Size = new System.Drawing.Size(342, 29);
+            this.textBoxEncoded.Size = new System.Drawing.Size(491, 29);
             this.textBoxEncoded.TabIndex = 2;
             // 
             // labelDistorted
@@ -93,14 +96,15 @@ namespace Codes.Views
             this.textBoxDistorted.Enabled = false;
             this.textBoxDistorted.Location = new System.Drawing.Point(198, 159);
             this.textBoxDistorted.Name = "textBoxDistorted";
-            this.textBoxDistorted.Size = new System.Drawing.Size(342, 29);
+            this.textBoxDistorted.Size = new System.Drawing.Size(491, 29);
             this.textBoxDistorted.TabIndex = 4;
+            this.textBoxDistorted.TextChanged += new System.EventHandler(this.textBoxDistorted_TextChanged);
             this.textBoxDistorted.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxDistorted_KeyPress);
             // 
             // labelDecoded
             // 
             this.labelDecoded.AutoSize = true;
-            this.labelDecoded.Location = new System.Drawing.Point(39, 212);
+            this.labelDecoded.Location = new System.Drawing.Point(38, 279);
             this.labelDecoded.Name = "labelDecoded";
             this.labelDecoded.Size = new System.Drawing.Size(153, 25);
             this.labelDecoded.TabIndex = 7;
@@ -109,15 +113,15 @@ namespace Codes.Views
             // textBoxDecoded
             // 
             this.textBoxDecoded.Enabled = false;
-            this.textBoxDecoded.Location = new System.Drawing.Point(199, 212);
+            this.textBoxDecoded.Location = new System.Drawing.Point(198, 279);
             this.textBoxDecoded.Name = "textBoxDecoded";
-            this.textBoxDecoded.Size = new System.Drawing.Size(342, 29);
+            this.textBoxDecoded.Size = new System.Drawing.Size(491, 29);
             this.textBoxDecoded.TabIndex = 6;
             // 
             // buttonEncode
             // 
             this.buttonEncode.Enabled = false;
-            this.buttonEncode.Location = new System.Drawing.Point(548, 43);
+            this.buttonEncode.Location = new System.Drawing.Point(709, 43);
             this.buttonEncode.Name = "buttonEncode";
             this.buttonEncode.Size = new System.Drawing.Size(89, 29);
             this.buttonEncode.TabIndex = 8;
@@ -128,7 +132,7 @@ namespace Codes.Views
             // buttonDistort
             // 
             this.buttonDistort.Enabled = false;
-            this.buttonDistort.Location = new System.Drawing.Point(548, 103);
+            this.buttonDistort.Location = new System.Drawing.Point(709, 103);
             this.buttonDistort.Name = "buttonDistort";
             this.buttonDistort.Size = new System.Drawing.Size(89, 29);
             this.buttonDistort.TabIndex = 9;
@@ -139,7 +143,7 @@ namespace Codes.Views
             // buttonDecode
             // 
             this.buttonDecode.Enabled = false;
-            this.buttonDecode.Location = new System.Drawing.Point(548, 160);
+            this.buttonDecode.Location = new System.Drawing.Point(709, 160);
             this.buttonDecode.Name = "buttonDecode";
             this.buttonDecode.Size = new System.Drawing.Size(89, 29);
             this.buttonDecode.TabIndex = 10;
@@ -149,7 +153,7 @@ namespace Codes.Views
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(548, 271);
+            this.buttonClear.Location = new System.Drawing.Point(708, 338);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(89, 29);
             this.buttonClear.TabIndex = 11;
@@ -160,14 +164,14 @@ namespace Codes.Views
             // labelDifference
             // 
             this.labelDifference.AutoSize = true;
-            this.labelDifference.Location = new System.Drawing.Point(36, 275);
+            this.labelDifference.Location = new System.Drawing.Point(35, 342);
             this.labelDifference.Name = "labelDifference";
             this.labelDifference.Size = new System.Drawing.Size(0, 25);
             this.labelDifference.TabIndex = 12;
             // 
             // backButton
             // 
-            this.backButton.Location = new System.Drawing.Point(265, 360);
+            this.backButton.Location = new System.Drawing.Point(265, 392);
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(159, 62);
             this.backButton.TabIndex = 13;
@@ -175,11 +179,39 @@ namespace Codes.Views
             this.backButton.UseVisualStyleBackColor = true;
             this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
+            // labelEncDistDifference
+            // 
+            this.labelEncDistDifference.AutoSize = true;
+            this.labelEncDistDifference.Location = new System.Drawing.Point(35, 200);
+            this.labelEncDistDifference.Name = "labelEncDistDifference";
+            this.labelEncDistDifference.Size = new System.Drawing.Size(0, 25);
+            this.labelEncDistDifference.TabIndex = 14;
+            // 
+            // labelRequiredSize
+            // 
+            this.labelRequiredSize.AutoSize = true;
+            this.labelRequiredSize.Location = new System.Drawing.Point(571, 15);
+            this.labelRequiredSize.Name = "labelRequiredSize";
+            this.labelRequiredSize.Size = new System.Drawing.Size(136, 25);
+            this.labelRequiredSize.TabIndex = 15;
+            this.labelRequiredSize.Text = "Required size:";
+            // 
+            // labelDifferenceIndices
+            // 
+            this.labelDifferenceIndices.AutoSize = true;
+            this.labelDifferenceIndices.Location = new System.Drawing.Point(35, 241);
+            this.labelDifferenceIndices.Name = "labelDifferenceIndices";
+            this.labelDifferenceIndices.Size = new System.Drawing.Size(0, 25);
+            this.labelDifferenceIndices.TabIndex = 16;
+            // 
             // SingleVectorMessageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(675, 450);
+            this.ClientSize = new System.Drawing.Size(811, 595);
+            this.Controls.Add(this.labelDifferenceIndices);
+            this.Controls.Add(this.labelRequiredSize);
+            this.Controls.Add(this.labelEncDistDifference);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.labelDifference);
             this.Controls.Add(this.buttonClear);
@@ -217,6 +249,9 @@ namespace Codes.Views
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Label labelDifference;
         private System.Windows.Forms.Button backButton;
+        private System.Windows.Forms.Label labelEncDistDifference;
+        private System.Windows.Forms.Label labelRequiredSize;
+        private System.Windows.Forms.Label labelDifferenceIndices;
     }
 }
 
