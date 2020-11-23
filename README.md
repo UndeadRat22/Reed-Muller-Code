@@ -11,6 +11,9 @@
 
 ## Scenarios
 
+## Doc in ltu:
+- https://docs.google.com/document/d/1SBbB5w6oEBluJ5nit1EhOED8v_CEOyatajGp50KbVSw/edit#
+
 This section contains the scenarios this program is able to handle.
 For all scenarios, prerequisite step is entering r, m and fault probability.
 
