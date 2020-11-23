@@ -29,6 +29,7 @@ namespace Codes.Views
 
             Program.Channel.DistortionProbability = distortion;
             Program.Channel.Seed = seed;
+            UpdateTextBoxes();
         }
 
         private void UpdateTextBoxes()
